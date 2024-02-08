@@ -10,7 +10,6 @@
     "format": "prettier --write ./src"
   },
   "dependencies": {
-    "cookiejs": "^2.1.3",
     "data-generator-retail": "^4.16.2",
     "date-fns": "^2.30.0",
     "fakerest": "^3.5.0",

@@ -1,55 +1,54 @@
 import { AuthProvider } from "react-admin";
-import {
-  setRefreshTokenEndpoint,
-  eraseToken,
-  getRefreshedToken,
-  getToken,
-} from "./inMemoryJWTManager";
+import TokenManager from "./JWTManager";
 import { jwtDecode } from "jwt-decode";
 
+export const inMemoryJWT = new TokenManager("ra-logout", "/api/auth/token");
+
 export const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
-    const request = new Request("api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: new Headers({ "Content-Type": "application/json" }),
-      credentials: "include",
-    });
-    setRefreshTokenEndpoint("/api/auth/token");
-    return fetch(request)
-      .then((response) => {
-        if (response.status < 200 || response.status >= 300) {
-          throw new Error(response.statusText);
-        }
-        return response.json();
-      })
-      .then(({ accessToken, ...user }) => {
-        localStorage.setItem("user", JSON.stringify(user));
-        const { exp, iat } = jwtDecode(accessToken);
-        if (exp && iat) setToken(accessToken, exp - iat);
+  login: async ({ username, password }) => {
+    try {
+      const response = await fetch("api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
       });
-  },
-  logout: () => {
-    localStorage.removeItem("user");
-    eraseToken();
-    return Promise.resolve();
-  },
-  checkError: () => Promise.resolve(),
-  checkAuth: () => {
-    console.log("checkAuth");
-    if (!getToken()) {
-      setRefreshTokenEndpoint("/api/auth/token");
-      return getRefreshedToken().then((tokenHasBeenRefreshed) => {
-        return tokenHasBeenRefreshed ? Promise.resolve() : Promise.reject();
-      });
-    } else {
-      return Promise.resolve();
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const { accessToken, ...user } = await response.json();
+      localStorage.setItem("user", JSON.stringify(user));
+      const { exp, iat } = jwtDecode(accessToken);
+      if (exp && iat) {
+        inMemoryJWT.setToken(accessToken);
+        Promise.resolve();
+      } else Promise.reject();
+    } catch (error) {
+      Promise.reject();
     }
   },
+
+  logout: () => {
+    localStorage.removeItem("user");
+    inMemoryJWT.eraseTokens();
+    return Promise.resolve();
+  },
+  checkError: async () => {
+    console.log("checkError");
+    await inMemoryJWT.getRefreshedTokens();
+  },
+  checkAuth: () => {
+    console.log("checkAuth");
+    return localStorage.getItem("user") ? Promise.resolve() : Promise.reject();
+  },
   getPermissions: () => {
+    console.log("checkPermissions");
     return Promise.resolve(undefined);
   },
   getIdentity: () => {
+    console.log("checkIdentity");
     const persistedUser = localStorage.getItem("user");
     const user = persistedUser ? JSON.parse(persistedUser) : null;
 
@@ -58,43 +57,3 @@ export const authProvider: AuthProvider = {
 };
 
 export default authProvider;
-
-export const authProviderFactory = (auth, setAuth) => {
-  const authProvider: AuthProvider = {
-    login: ({ username, password }) => {
-      console.log({ username, password });
-      const request = new Request("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        headers: new Headers({ "Content-Type": "application/json" }),
-      });
-      return fetch(request)
-        .then((response) => {
-          if (response.status < 200 || response.status >= 300) {
-            throw new Error(response.statusText);
-          }
-          return response.json();
-        })
-        .then((user) => {
-          console.log({ user });
-          setAuth(user);
-        })
-        .catch(() => {
-          throw new Error("Network error");
-        });
-    },
-    logout: () => {
-      setAuth(null);
-      return Promise.resolve();
-    },
-    checkError: () => Promise.resolve(),
-    checkAuth: () => (auth ? Promise.resolve() : Promise.reject()),
-    getPermissions: () => {
-      return Promise.resolve(undefined);
-    },
-    getIdentity: () => {
-      return Promise.resolve(auth);
-    },
-  };
-  return authProvider;
-};
