@@ -5,16 +5,12 @@ import {
   localStorageStore,
   useStore,
   StoreContextProvider,
-  fetchUtils,
-  Options,
 } from "react-admin";
 import { Route } from "react-router";
 
-import authProvider, { authProviderFactory } from "./authProvider";
+import { authProvider, dataProvider } from "./providers";
 import categories from "./categories";
 import { Dashboard } from "./dashboard";
-// import dataProviderFactory from "./dataProvider";
-import { dataProviderFactory, dataProvider } from "./JWTdataProvider";
 import invoices from "./invoices";
 import { Layout, Login } from "./layout";
 import orders from "./orders";
@@ -24,7 +20,6 @@ import Segments from "./segments/Segments";
 import visitors from "./visitors";
 import { themes, ThemeName } from "./themes/themes";
 import { i18nProvider } from "./i18n";
-import { AuthInterface } from "./types";
 
 const store = localStorageStore(undefined, "React Admin Panel");
 
@@ -47,6 +42,7 @@ const AdminApp = () => {
       lightTheme={lightTheme}
       darkTheme={darkTheme}
       defaultTheme="light"
+      requireAuth
     >
       <CustomRoutes>
         <Route path="/segments" element={<Segments />} />
