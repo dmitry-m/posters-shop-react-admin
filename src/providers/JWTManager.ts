@@ -1,11 +1,14 @@
 import { jwtDecode } from "jwt-decode";
+import { Mutex, MutexInterface } from "async-mutex";
+
+const mutex: MutexInterface = new Mutex();
 
 export default class TokenManager {
   private inMemoryJWT: string | null = null;
   private logoutEventName: string;
   private refreshEndpoint: string;
   private logoutEndpoint: string;
-  private logOutEvent: boolean = false;
+  private logoutEvent: boolean = false;
   private refreshInterval: number | undefined = undefined;
 
   constructor(
@@ -21,8 +24,7 @@ export default class TokenManager {
       if (event.key === this.logoutEventName) {
         console.log("storage listener");
         window.clearInterval(this.refreshInterval);
-        this.logOutEvent = true;
-        this.inMemoryJWT = null;
+        this.eraseTokens();
       }
     });
   }
@@ -42,6 +44,7 @@ export default class TokenManager {
   private refreshToken(delay: number): void {
     console.log({ delay });
     if (this.refreshInterval) {
+      console.log("timer clear");
       window.clearInterval(this.refreshInterval);
     }
     console.log("timer init");
@@ -54,35 +57,38 @@ export default class TokenManager {
   public async getRefreshedToken(): Promise<string | null> {
     console.log("refresh tokens");
     console.log({ url: this.refreshEndpoint });
-    if (this.logOutEvent) {
-      console.log("reject logout event");
-      return this.getToken();
-    }
+    // if (this.inMemoryJWT) return this.inMemoryJWT;
+    await mutex.waitForUnlock();
 
-    try {
-      const response = await fetch(this.refreshEndpoint, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-      // принимать только accessToken
-      if (response.ok) {
-        const { accessToken }: { accessToken: string } = await response.json();
+    if (!mutex.isLocked() && !this.logoutEvent) {
+      const release = await mutex.acquire();
+      try {
+        const response = await fetch(this.refreshEndpoint, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
 
-        if (accessToken) {
-          return this.setToken(accessToken);
-        }
+        if (response.ok) {
+          const { accessToken } = await response.json();
+          console.log("token was received");
+          this.setToken(accessToken);
+
+          return this.inMemoryJWT;
+        } else return this.eraseTokens();
+      } catch (error) {
+        console.error(error);
+        this.eraseTokens();
+        if (error instanceof Error) return error.message;
+      } finally {
+        release();
       }
-
-      console.log("Token renewal failure");
-      return this.eraseTokens();
-    } catch (error) {
-      console.error(error);
-      this.eraseTokens();
-      if (error instanceof Error) return error.message;
+    } else {
+      await mutex.waitForUnlock();
+      return this.inMemoryJWT;
     }
 
-    return this.getToken();
+    return this.inMemoryJWT;
   }
 
   public setToken(token: string): string {
@@ -92,14 +98,19 @@ export default class TokenManager {
     if (exp && iat) {
       this.refreshToken(exp - iat);
     }
+    this.logoutEvent = false;
 
     return this.inMemoryJWT;
   }
 
   public async eraseTokens(): Promise<null> {
-    await fetch(this.logoutEndpoint);
+    if (!this.logoutEvent) {
+      await fetch(this.logoutEndpoint);
+      window.localStorage.setItem(this.logoutEventName, Date.now().toString());
+      this.logoutEvent = true;
+    }
     window.clearInterval(this.refreshInterval);
-    window.localStorage.setItem(this.logoutEventName, Date.now().toString());
+
     return (this.inMemoryJWT = null);
   }
 }

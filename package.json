@@ -10,6 +10,7 @@
     "format": "prettier --write ./src"
   },
   "dependencies": {
+    "async-mutex": "^0.4.1",
     "data-generator-retail": "^4.16.2",
     "date-fns": "^2.30.0",
     "fakerest": "^3.5.0",

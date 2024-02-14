@@ -1,4 +1,4 @@
 import { authProvider } from "./authProvider";
-import { dataProvider } from "./JWTdataProvider";
+import { dataProvider } from "./dataProvider";
 
 export { authProvider, dataProvider };

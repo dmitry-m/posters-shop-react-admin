@@ -6,7 +6,6 @@ import { inMemoryJWT, API_PREFIX } from "./authProvider";
 const httpClient = async (url: string, options: Options | undefined) => {
   const token =
     inMemoryJWT.getToken() || (await inMemoryJWT.getRefreshedToken());
-  if (token === null) return Promise.reject("No JWT token");
 
   if (!options) options = {};
   options.user = {

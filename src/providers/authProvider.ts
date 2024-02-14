@@ -9,43 +9,77 @@ const TOKEN_URL = API_PREFIX + import.meta.env.VITE_TOKEN_URL;
 
 export const inMemoryJWT = new TokenManager(TOKEN_URL, LOGOUT_URL);
 
-export const authProvider: AuthProvider = {
-  login: async ({ username, password }) => {
-    try {
-      const response = await fetch(LOGIN_URL, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+export const authProvider: AuthProvider & {
+  signup: ({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) => Promise<{ redirectTo?: string | boolean } | void | any>;
+} = {
+  login: ({ username, password }) => {
+    return fetch(LOGIN_URL, {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const { accessToken, ...user } = data;
+        localStorage.setItem("user", JSON.stringify(user));
+        inMemoryJWT.setToken(accessToken);
+        if (user.role === "user") {
+          return { redirectTo: "/" };
+        }
+      })
+      .catch((error) => {
+        return Promise.reject(error);
       });
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      const { accessToken, ...user } = await response.json();
-
-      localStorage.setItem("user", JSON.stringify(user));
-      inMemoryJWT.setToken(accessToken);
-    } catch (error) {
-      Promise.reject(error);
-    }
   },
-
+  signup: ({ username, password }) => {
+    return fetch(LOGIN_URL, {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const { accessToken, ...user } = data;
+        localStorage.setItem("user", JSON.stringify(user));
+        return inMemoryJWT.setToken(accessToken);
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+  },
   logout: () => {
     localStorage.removeItem("user");
     inMemoryJWT.eraseTokens();
     return Promise.resolve();
   },
-  checkError: async () => {
+  checkError: () => {
     console.log("checkError");
-    const token = await inMemoryJWT.getRefreshedToken();
-    if (!token) {
-      console.log("removeItem(user)");
-      localStorage.removeItem("user");
-      Promise.reject();
-    }
-    Promise.resolve();
+    return inMemoryJWT.getRefreshedToken().then((token) => {
+      if (!token) {
+        console.log("removeItem(user)");
+        localStorage.removeItem("user");
+        return Promise.reject();
+      }
+      return Promise.resolve();
+    });
   },
   checkAuth: () => {
     console.log("checkAuth");
@@ -54,9 +88,9 @@ export const authProvider: AuthProvider = {
   getPermissions: () => {
     console.log("checkPermissions");
     const persistedUser = localStorage.getItem("user");
-    const user = persistedUser ? JSON.parse(persistedUser) : null;
-
-    return Promise.resolve(user);
+    const role = persistedUser ? JSON.parse(persistedUser).role : null;
+    console.log({ role });
+    return Promise.resolve(role);
   },
   getIdentity: () => {
     console.log("checkIdentity");
