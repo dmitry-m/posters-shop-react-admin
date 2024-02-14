@@ -12,6 +12,11 @@ const customEnglishMessages: TranslationMessages = {
       light: "Light",
       dark: "Dark",
     },
+    auth: {
+      password_repeat: "Repeat password",
+      register: "Sign up",
+      register_error: "Registration failed",
+    },
     dashboard: {
       monthly_revenue: "Monthly Revenue",
       month_history: "30 Day Revenue History",
