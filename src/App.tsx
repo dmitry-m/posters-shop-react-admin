@@ -5,6 +5,7 @@ import {
   localStorageStore,
   useStore,
   StoreContextProvider,
+  Authenticated,
 } from "react-admin";
 import { Route } from "react-router";
 
@@ -12,7 +13,7 @@ import { authProvider, dataProvider } from "./providers";
 import categories from "./categories";
 import { Dashboard } from "./dashboard";
 import invoices from "./invoices";
-import { Layout, Login } from "./layout";
+import { Layout, Login, Register } from "./layout";
 import orders from "./orders";
 import products from "./products";
 import reviews from "./reviews";
@@ -42,17 +43,38 @@ const AdminApp = () => {
       lightTheme={lightTheme}
       darkTheme={darkTheme}
       defaultTheme="light"
-      requireAuth
     >
-      <CustomRoutes>
-        <Route path="/segments" element={<Segments />} />
-      </CustomRoutes>
-      <Resource name="customers" {...visitors} />
-      <Resource name="commands" {...orders} options={{ label: "Orders" }} />
-      <Resource name="invoices" {...invoices} />
-      <Resource name="products" {...products} />
-      <Resource name="categories" {...categories} />
-      <Resource name="reviews" {...reviews} />
+      {(permissions) => (
+        <>
+          <CustomRoutes noLayout>
+            <Route path="/register" element={<Register />} />
+          </CustomRoutes>
+          <CustomRoutes>
+            <Route
+              path="/segments"
+              element={
+                <Authenticated requireAuth>
+                  <Segments />
+                </Authenticated>
+              }
+            />
+          </CustomRoutes>
+          {permissions === "admin" && (
+            <>
+              <Resource name="customers" {...visitors} />
+              <Resource
+                name="commands"
+                {...orders}
+                options={{ label: "Orders" }}
+              />
+              <Resource name="invoices" {...invoices} />
+              <Resource name="products" {...products} />
+              <Resource name="categories" {...categories} />
+              <Resource name="reviews" {...reviews} />
+            </>
+          )}
+        </>
+      )}
     </Admin>
   );
 };

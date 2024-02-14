@@ -21,7 +21,7 @@ import {
 
 import Box from "@mui/material/Box";
 
-const Login = () => {
+const Register = () => {
   const [loading, setLoading] = useState(false);
   const translate = useTranslate();
   const redirect = useRedirect();
@@ -33,32 +33,42 @@ const Login = () => {
     localStorage.getItem("user") && redirect("/");
   });
 
-  const handleSubmit = (auth: FormValues) => {
+  const handleSubmit = ({ username, password }: FormValues) => {
     setLoading(true);
-    login(
-      auth,
-      location.state ? (location.state as any).nextPathname : "/"
-    ).catch((error: Error) => {
-      setLoading(false);
-      notify(
-        typeof error === "string"
-          ? error
-          : typeof error === "undefined" || !error.message
-          ? "ra.auth.sign_in_error"
-          : error.message,
-        {
-          type: "error",
-          messageArgs: {
-            _:
-              typeof error === "string"
-                ? error
-                : error && error.message
-                ? error.message
-                : undefined,
-          },
+    return fetch("api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
         }
-      );
-    });
+        return response.json();
+      })
+      .then((data) => {})
+      .catch((error: Error) => {
+        setLoading(false);
+        notify(
+          typeof error === "string"
+            ? error
+            : typeof error === "undefined" || !error.message
+            ? "pos.auth.register_error"
+            : error.message,
+          {
+            type: "error",
+            messageArgs: {
+              _:
+                typeof error === "string"
+                  ? error
+                  : error && error.message
+                  ? error.message
+                  : undefined,
+            },
+          }
+        );
+      });
   };
 
   return (
@@ -95,7 +105,7 @@ const Login = () => {
               color: (theme) => theme.palette.grey[500],
             }}
           >
-            Hint: alice@prisma.io / 123456
+            Hint: demo / demo
           </Box>
           <Box sx={{ padding: "0 1em 1em 1em" }}>
             <Box sx={{ marginTop: "1em" }}>
@@ -110,8 +120,18 @@ const Login = () => {
             </Box>
             <Box sx={{ marginTop: "1em" }}>
               <TextInput
-                source="password"
+                source="password_repeat"
                 label={translate("ra.auth.password")}
+                type="password"
+                disabled={loading}
+                validate={required()}
+                fullWidth
+              />
+            </Box>
+            <Box sx={{ marginTop: "1em" }}>
+              <TextInput
+                source="password"
+                label={translate("pos.auth.password_repeat")}
                 type="password"
                 disabled={loading}
                 validate={required()}
@@ -127,7 +147,7 @@ const Login = () => {
               color: (theme) => theme.palette.grey[500],
             }}
           >
-            <Link to="/register"> {translate("pos.auth.register")}</Link>
+            <Link to="/login"> {translate("ra.auth.sign_in")}</Link>
           </Box>
           <CardActions sx={{ padding: "0 1em 1em 1em" }}>
             <Button
@@ -138,7 +158,7 @@ const Login = () => {
               fullWidth
             >
               {loading && <CircularProgress size={25} thickness={2} />}
-              {translate("ra.auth.sign_in")}
+              {translate("pos.auth.register")}
             </Button>
           </CardActions>
         </Card>
@@ -147,12 +167,12 @@ const Login = () => {
   );
 };
 
-Login.propTypes = {
+Register.propTypes = {
   authProvider: PropTypes.func,
   previousRoute: PropTypes.string,
 };
 
-export default Login;
+export default Register;
 
 interface FormValues {
   username?: string;
