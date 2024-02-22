@@ -1,5 +1,5 @@
-import React, { useMemo, CSSProperties } from "react";
-import { useGetList, useStore } from "react-admin";
+import React, { useMemo, CSSProperties, useEffect } from "react";
+import { useGetList, usePermissions, useRedirect, useStore } from "react-admin";
 import { useMediaQuery, Theme } from "@mui/material";
 import { subDays, startOfDay } from "date-fns";
 
@@ -39,19 +39,23 @@ const Spacer = () => <span style={{ width: "1em" }} />;
 const VerticalSpacer = () => <span style={{ height: "1em" }} />;
 
 const Dashboard = () => {
-  const [themeName] = useStore<ThemeName>("themeName", "soft");
-  console.log({ dashboard: themeName });
+  const redirect = useRedirect();
   const isXSmall = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("sm")
   );
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
   const aMonthAgo = useMemo(() => subDays(startOfDay(new Date()), 30), []);
-
   const { data: orders } = useGetList<Order>("commands", {
     filter: { date_gte: aMonthAgo.toISOString() },
     sort: { field: "date", order: "DESC" },
     pagination: { page: 1, perPage: 50 },
   });
+  const { isLoading, permissions } = usePermissions();
+  useEffect(() => {
+    if (!isLoading && permissions !== "admin") {
+      redirect("/segments");
+    }
+  }, [permissions, isLoading, redirect]);
 
   const aggregation = useMemo<State>(() => {
     if (!orders) return {};
@@ -88,60 +92,66 @@ const Dashboard = () => {
   }, [orders]);
 
   const { nbNewOrders, pendingOrders, revenue, recentOrders } = aggregation;
-  return isXSmall ? (
-    <div>
+  return isLoading ? (
+    <div>Waiting for permissions...</div>
+  ) : permissions === "admin" ? (
+    isXSmall ? (
+      <div>
+        <div style={styles.flexColumn as CSSProperties}>
+          <Welcome />
+          <MonthlyRevenue value={revenue} />
+          <VerticalSpacer />
+          <NbNewOrders value={nbNewOrders} />
+          <VerticalSpacer />
+          <PendingOrders orders={pendingOrders} />
+        </div>
+      </div>
+    ) : isSmall ? (
       <div style={styles.flexColumn as CSSProperties}>
+        <div style={styles.singleCol}>
+          <Welcome />
+        </div>
+        <div style={styles.flex}>
+          <MonthlyRevenue value={revenue} />
+          <Spacer />
+          <NbNewOrders value={nbNewOrders} />
+        </div>
+        <div style={styles.singleCol}>
+          <OrderChart orders={recentOrders} />
+        </div>
+        <div style={styles.singleCol}>
+          <PendingOrders orders={pendingOrders} />
+        </div>
+      </div>
+    ) : (
+      <>
         <Welcome />
-        <MonthlyRevenue value={revenue} />
-        <VerticalSpacer />
-        <NbNewOrders value={nbNewOrders} />
-        <VerticalSpacer />
-        <PendingOrders orders={pendingOrders} />
-      </div>
-    </div>
-  ) : isSmall ? (
-    <div style={styles.flexColumn as CSSProperties}>
-      <div style={styles.singleCol}>
-        <Welcome />
-      </div>
-      <div style={styles.flex}>
-        <MonthlyRevenue value={revenue} />
-        <Spacer />
-        <NbNewOrders value={nbNewOrders} />
-      </div>
-      <div style={styles.singleCol}>
-        <OrderChart orders={recentOrders} />
-      </div>
-      <div style={styles.singleCol}>
-        <PendingOrders orders={pendingOrders} />
-      </div>
-    </div>
+        <div style={styles.flex}>
+          <div style={styles.leftCol}>
+            <div style={styles.flex}>
+              <MonthlyRevenue value={revenue} />
+              <Spacer />
+              <NbNewOrders value={nbNewOrders} />
+            </div>
+            <div style={styles.singleCol}>
+              <OrderChart orders={recentOrders} />
+            </div>
+            <div style={styles.singleCol}>
+              <PendingOrders orders={pendingOrders} />
+            </div>
+          </div>
+          <div style={styles.rightCol}>
+            <div style={styles.flex}>
+              <PendingReviews />
+              <Spacer />
+              <NewCustomers />
+            </div>
+          </div>
+        </div>
+      </>
+    )
   ) : (
-    <>
-      <Welcome />
-      <div style={styles.flex}>
-        <div style={styles.leftCol}>
-          <div style={styles.flex}>
-            <MonthlyRevenue value={revenue} />
-            <Spacer />
-            <NbNewOrders value={nbNewOrders} />
-          </div>
-          <div style={styles.singleCol}>
-            <OrderChart orders={recentOrders} />
-          </div>
-          <div style={styles.singleCol}>
-            <PendingOrders orders={pendingOrders} />
-          </div>
-        </div>
-        <div style={styles.rightCol}>
-          <div style={styles.flex}>
-            <PendingReviews />
-            <Spacer />
-            <NewCustomers />
-          </div>
-        </div>
-      </div>
-    </>
+    <> </>
   );
 };
 

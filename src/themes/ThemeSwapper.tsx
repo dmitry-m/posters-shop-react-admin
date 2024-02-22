@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore, useTranslate, ToggleThemeButton } from "react-admin";
 import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
@@ -6,8 +6,14 @@ import ColorLensIcon from "@mui/icons-material/ColorLens";
 import { themes, ThemeName } from "./themes";
 
 export const ThemeSwapper = () => {
+  const [themeName, setThemeName] = useStore<ThemeName>("themeName", "soft");
+  console.log({ swapper: themeName });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  useEffect(() => {
+    setThemeName(themeName);
+  }, []);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -15,8 +21,6 @@ export const ThemeSwapper = () => {
     setAnchorEl(null);
   };
 
-  const [themeName, setThemeName] = useStore<ThemeName>("themeName");
-  console.log({ swapper: themeName });
   const handleChange = (_: React.MouseEvent<HTMLElement>, index: number) => {
     const newTheme = themes[index];
     setThemeName(newTheme.name);

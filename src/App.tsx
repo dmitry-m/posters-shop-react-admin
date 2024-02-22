@@ -25,13 +25,13 @@ import { i18nProvider } from "./i18n";
 const store = localStorageStore(undefined, "React Admin Panel");
 
 const AdminApp = () => {
-  const [themeName] = useStore<ThemeName>("themeName", "soft");
+  const [themeName] = useStore<ThemeName>("themeName");
   const lightTheme = themes.find((theme) => theme.name === themeName)?.light;
   const darkTheme = themes.find((theme) => theme.name === themeName)?.dark;
 
   return (
     <Admin
-      title=""
+      title="Posters Shop"
       dataProvider={dataProvider}
       store={store}
       authProvider={authProvider}

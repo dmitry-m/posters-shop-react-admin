@@ -1,81 +1,69 @@
 import { jwtDecode } from "jwt-decode";
 import { Mutex, MutexInterface } from "async-mutex";
+import { User } from "../types";
+import { fetchUtils } from "react-admin";
 
 const mutex: MutexInterface = new Mutex();
 
+interface AuthInterface extends User {
+  accessToken: string;
+}
+
 export default class TokenManager {
   private inMemoryJWT: string | null = null;
-  private logoutEventName: string;
   private refreshEndpoint: string;
-  private logoutEndpoint: string;
-  private logoutEvent: boolean = false;
   private refreshInterval: number | undefined = undefined;
 
-  constructor(
-    refreshEndpoint: string = "token",
-    logoutEndpoint: string = "logout",
-    logoutEventName: string = "ra-logout"
-  ) {
-    this.logoutEventName = logoutEventName;
+  constructor(refreshEndpoint: string = "token") {
     this.refreshEndpoint = refreshEndpoint;
-    this.logoutEndpoint = logoutEndpoint;
-
-    window.addEventListener("storage", (event: StorageEvent) => {
-      if (event.key === this.logoutEventName) {
-        console.log("storage listener");
-        window.clearInterval(this.refreshInterval);
-        this.eraseTokens();
-      }
-    });
   }
 
-  public getToken(): string | null {
-    return this.inMemoryJWT;
-  }
-
-  public setLogoutEventName(name: string): void {
-    this.logoutEventName = name;
-  }
-
-  public setRefreshTokenEndpoint(endpoint: string): void {
-    this.refreshEndpoint = endpoint;
-  }
-
-  private refreshToken(delay: number): void {
+  private setRefreshTokenInterval(delay: number): void {
     console.log({ delay });
     if (this.refreshInterval) {
       console.log("timer clear");
       window.clearInterval(this.refreshInterval);
     }
     console.log("timer init");
-    this.refreshInterval = window.setInterval(
-      this.getRefreshedToken.bind(this),
-      (delay - 5) * 1000
-    ); // Validity period of the token in seconds, minus 5 seconds
+    this.refreshInterval = window.setInterval(async () => {
+      const auth = await this.fetchAuth.bind(this)();
+      if (auth) return this.setToken.bind(this)(auth.accessToken);
+      return this.eraseTokens.bind(this)();
+    }, (delay - 5) * 1000); // Validity period of the token in seconds, minus 5 seconds
   }
 
-  public async getRefreshedToken(): Promise<string | null> {
-    console.log("refresh tokens");
+  public async fetchAuth(): Promise<AuthInterface | null> {
+    console.log("fetch token");
     console.log({ url: this.refreshEndpoint });
-    // if (this.inMemoryJWT) return this.inMemoryJWT;
-    await mutex.waitForUnlock();
 
-    if (!mutex.isLocked() && !this.logoutEvent) {
+    return fetchUtils
+      .fetchJson(this.refreshEndpoint, {
+        method: "GET",
+        credentials: "include",
+      })
+      .then(({ json }) => {
+        console.log("token was received");
+        return json;
+      })
+      .catch(() => {
+        return null;
+      });
+  }
+
+  public async getFreshToken(): Promise<string | null> {
+    console.log("get token");
+
+    if (this.inMemoryJWT) {
+      return this.inMemoryJWT;
+    }
+
+    await mutex.waitForUnlock();
+    if (!mutex.isLocked()) {
       const release = await mutex.acquire();
       try {
-        const response = await fetch(this.refreshEndpoint, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const { accessToken } = await response.json();
-          console.log("token was received");
-          this.setToken(accessToken);
-
-          return this.inMemoryJWT;
-        } else return this.eraseTokens();
+        const auth = await this.fetchAuth();
+        if (auth) return this.setToken(auth.accessToken);
+        return this.eraseTokens();
       } catch (error) {
         console.error(error);
         this.eraseTokens();
@@ -92,25 +80,21 @@ export default class TokenManager {
   }
 
   public setToken(token: string): string {
+    console.log("set tokens");
     this.inMemoryJWT = token;
     const { exp, iat } = jwtDecode(token);
 
     if (exp && iat) {
-      this.refreshToken(exp - iat);
+      this.setRefreshTokenInterval(exp - iat);
     }
-    this.logoutEvent = false;
 
     return this.inMemoryJWT;
   }
 
   public async eraseTokens(): Promise<null> {
-    if (!this.logoutEvent) {
-      await fetch(this.logoutEndpoint);
-      window.localStorage.setItem(this.logoutEventName, Date.now().toString());
-      this.logoutEvent = true;
-    }
+    this.inMemoryJWT = null;
     window.clearInterval(this.refreshInterval);
 
-    return (this.inMemoryJWT = null);
+    return this.inMemoryJWT;
   }
 }

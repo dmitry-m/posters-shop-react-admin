@@ -14,6 +14,7 @@ const customEnglishMessages: TranslationMessages = {
     },
     auth: {
       password_repeat: "Repeat password",
+      password_mismatch: "Passwords are not same",
       register: "Sign up",
       register_error: "Registration failed",
     },

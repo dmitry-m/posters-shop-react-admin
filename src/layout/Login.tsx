@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useRedirect } from "react-admin";
+
 import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
 import {
@@ -12,11 +13,11 @@ import {
 import LockIcon from "@mui/icons-material/Lock";
 import {
   Form,
-  required,
   TextInput,
   useTranslate,
   useLogin,
   useNotify,
+  required,
 } from "react-admin";
 
 import Box from "@mui/material/Box";
@@ -34,6 +35,7 @@ const Login = () => {
   });
 
   const handleSubmit = (auth: FormValues) => {
+    console.log({ auth });
     setLoading(true);
     login(
       auth,
@@ -44,7 +46,9 @@ const Login = () => {
         typeof error === "string"
           ? error
           : typeof error === "undefined" || !error.message
-          ? "ra.auth.sign_in_error"
+          ? "pos.auth.register_error"
+          : Array.isArray(error.message)
+          ? error.message.join(", ")
           : error.message,
         {
           type: "error",
@@ -59,6 +63,7 @@ const Login = () => {
         }
       );
     });
+    setLoading(true);
   };
 
   return (

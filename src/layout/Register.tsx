@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useRedirect } from "react-admin";
+import { Link, useAuthProvider, useRedirect } from "react-admin";
 import PropTypes from "prop-types";
-import { useLocation } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -12,42 +11,47 @@ import {
 import LockIcon from "@mui/icons-material/Lock";
 import {
   Form,
-  required,
   TextInput,
   useTranslate,
-  useLogin,
   useNotify,
+  required,
+  minLength,
 } from "react-admin";
 
 import Box from "@mui/material/Box";
+import { MyAuthProvider } from "../providers/authProvider";
+
+const passwordRepeatValidation = (
+  value: string,
+  allValues: { [key: string]: any }
+) => {
+  if (value !== allValues.password) return "pos.auth.password_mismatch";
+
+  return undefined;
+};
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
   const translate = useTranslate();
   const redirect = useRedirect();
   const notify = useNotify();
-  const login = useLogin();
-  const location = useLocation();
+  const authProvider = useAuthProvider<MyAuthProvider>();
 
   useEffect(() => {
     localStorage.getItem("user") && redirect("/");
   });
 
-  const handleSubmit = ({ username, password }: FormValues) => {
+  const handleSubmit = (auth: FormValues) => {
+    console.log({ auth });
     setLoading(true);
-    return fetch("api/auth/signup", {
-      method: "POST",
-      body: JSON.stringify({ username, password }),
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
+    authProvider
+      .signUp(auth)
+      .then((result) => {
+        console.log({ result });
+        if (typeof result?.redirectTo === "string") {
+          redirect(result.redirectTo);
         }
-        return response.json();
       })
-      .then((data) => {})
       .catch((error: Error) => {
         setLoading(false);
         notify(
@@ -55,6 +59,8 @@ const Register = () => {
             ? error
             : typeof error === "undefined" || !error.message
             ? "pos.auth.register_error"
+            : Array.isArray(error.message)
+            ? error.message.join(", ")
             : error.message,
           {
             type: "error",
@@ -72,7 +78,7 @@ const Register = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
+    <Form onSubmit={handleSubmit} mode="onBlur" reValidateMode="onBlur">
       <Box
         sx={{
           display: "flex",
@@ -120,21 +126,21 @@ const Register = () => {
             </Box>
             <Box sx={{ marginTop: "1em" }}>
               <TextInput
-                source="password_repeat"
+                source="password"
                 label={translate("ra.auth.password")}
                 type="password"
                 disabled={loading}
-                validate={required()}
+                validate={[required(), minLength(6)]}
                 fullWidth
               />
             </Box>
             <Box sx={{ marginTop: "1em" }}>
               <TextInput
-                source="password"
+                source="password_repeat"
                 label={translate("pos.auth.password_repeat")}
                 type="password"
                 disabled={loading}
-                validate={required()}
+                validate={[required(), minLength(6), passwordRepeatValidation]}
                 fullWidth
               />
             </Box>

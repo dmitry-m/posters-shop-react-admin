@@ -1,7 +1,7 @@
 import { TranslationMessages } from "react-admin";
 import russianMessages from "ra-language-russian";
 
-const customrussianMessages: TranslationMessages = {
+const customRussianMessages: TranslationMessages = {
   ...russianMessages,
   pos: {
     search: "Поиск",
@@ -14,6 +14,7 @@ const customrussianMessages: TranslationMessages = {
     },
     auth: {
       password_repeat: "Повторите пароль",
+      password_mismatch: "Пароли не совпадают",
       register: "Регистрация",
       register_error: "Произошла ошибка регистрации",
     },
@@ -49,7 +50,8 @@ const customrussianMessages: TranslationMessages = {
         title: 'Отзыв о "%{product}"',
       },
       order: {
-        title: "Заказ 1 плакат |||| Заказ %{smart_count} плакатов",
+        title:
+          "Заказ 1 плаката |||| Заказ %{smart_count} плакатов |||| Заказ %{smart_count} плакатов",
       },
     },
   },
@@ -105,8 +107,8 @@ const customrussianMessages: TranslationMessages = {
       },
     },
     commands: {
-      name: "Команда |||| Команды",
-      amount: "1 команда |||| %{smart_count} команды",
+      name: "Заказ |||| Заказы",
+      amount: "1 заказ |||| %{smart_count} заказа |||| %{smart_count} заказов",
       title: "Заказ №%{reference}",
       fields: {
         basket: {
@@ -198,10 +200,10 @@ const customrussianMessages: TranslationMessages = {
       },
     },
     reviews: {
-      name: "Комментарий |||| Комментарии",
-      amount: "1 комментарий |||| %{smart_count} комментариев",
-      relative_to_poster: "Комментарий на",
-      detail: "Детали комментария",
+      name: "Отзыв |||| Отзывы",
+      amount: "1 отзыв |||| %{smart_count} отзыва |||| %{smart_count} отзывов",
+      relative_to_poster: "Отзыв на",
+      detail: "Детали отзыва",
       fields: {
         customer_id: "Клиент",
         command_id: "Заказ",
@@ -218,10 +220,10 @@ const customrussianMessages: TranslationMessages = {
         reject: "Отклонить",
       },
       notification: {
-        approved_success: "Комментарий одобрен",
-        approved_error: "Ошибка: Комментарий не одобрен",
-        rejected_success: "Комментарий отклонен",
-        rejected_error: "Ошибка: Комментарий не отклонен",
+        approved_success: "Отзыв одобрен",
+        approved_error: "Ошибка: Отзыв не одобрен",
+        rejected_success: "Отзыв отклонен",
+        rejected_error: "Ошибка: Отзыв не отклонен",
       },
     },
     segments: {
@@ -242,4 +244,4 @@ const customrussianMessages: TranslationMessages = {
   },
 };
 
-export default customrussianMessages;
+export default customRussianMessages;
