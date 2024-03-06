@@ -1,37 +1,18 @@
-import {
-    RaThemeOptions,
-    defaultLightTheme,
-    defaultDarkTheme,
-    nanoDarkTheme,
-    nanoLightTheme,
-    radiantDarkTheme,
-    radiantLightTheme,
-    houseDarkTheme,
-    houseLightTheme,
-} from 'react-admin';
+import { RaThemeOptions, defaultLightTheme, defaultDarkTheme } from "react-admin";
 
-import { softDarkTheme, softLightTheme } from './softTheme';
-import { chiptuneTheme } from './chiptuneTheme';
+import { customDarkTheme, customLightTheme } from "./customTheme";
+import { softLightTheme, softDarkTheme } from "./softTheme";
 
-export type ThemeName =
-    | 'soft'
-    | 'default'
-    | 'nano'
-    | 'radiant'
-    | 'house'
-    | 'chiptune';
+export type ThemeName = "custom" | "default" | "soft";
 
 export interface Theme {
-    name: ThemeName;
-    light: RaThemeOptions;
-    dark?: RaThemeOptions;
+  name: ThemeName;
+  light: RaThemeOptions;
+  dark?: RaThemeOptions;
 }
 
 export const themes: Theme[] = [
-    { name: 'soft', light: softLightTheme, dark: softDarkTheme },
-    { name: 'default', light: defaultLightTheme, dark: defaultDarkTheme },
-    { name: 'nano', light: nanoLightTheme, dark: nanoDarkTheme },
-    { name: 'radiant', light: radiantLightTheme, dark: radiantDarkTheme },
-    { name: 'house', light: houseLightTheme, dark: houseDarkTheme },
-    { name: 'chiptune', light: chiptuneTheme },
+  { name: "custom", light: customLightTheme, dark: customDarkTheme },
+  { name: "soft", light: softLightTheme, dark: softDarkTheme },
+  { name: "default", light: defaultLightTheme, dark: defaultDarkTheme },
 ];

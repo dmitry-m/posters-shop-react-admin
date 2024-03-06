@@ -54,6 +54,43 @@ const customEnglishMessages: TranslationMessages = {
     },
   },
   resources: {
+    users: {
+      name: "User |||| Users",
+      fields: {
+        id: "User",
+        email: "Email",
+        fullName: "Full name",
+        avatar: "Avatar",
+        role: "Role",
+      },
+      filters: {
+        last_visited: "Last visited",
+        today: "Today",
+        this_week: "This week",
+        last_week: "Last week",
+        this_month: "This month",
+        last_month: "Last month",
+        earlier: "Earlier",
+        has_ordered: "Has ordered",
+        has_newsletter: "Has newsletter",
+        group: "Segment",
+      },
+      fieldGroups: {
+        identity: "Identity",
+        address: "Address",
+        stats: "Stats",
+        history: "History",
+        password: "Password",
+        change_password: "Change Password",
+      },
+      page: {
+        delete: "Delete Customer",
+      },
+      errors: {
+        password_mismatch:
+          "The password confirmation is not the same as the password.",
+      },
+    },
     customers: {
       name: "Customer |||| Customers",
       fields: {
@@ -224,6 +261,10 @@ const customEnglishMessages: TranslationMessages = {
         returns: "Returns",
         reviewer: "Reviewer",
       },
+    },
+    roles: {
+      admin: "Administrator",
+      user: "User",
     },
   },
 };

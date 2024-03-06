@@ -19,6 +19,7 @@ import products from "./products";
 import reviews from "./reviews";
 import Segments from "./segments/Segments";
 import visitors from "./visitors";
+import users from "./users";
 import { themes, ThemeName } from "./themes/themes";
 import { i18nProvider } from "./i18n";
 
@@ -42,7 +43,6 @@ const AdminApp = () => {
       disableTelemetry
       lightTheme={lightTheme}
       darkTheme={darkTheme}
-      defaultTheme="light"
     >
       {(permissions) => (
         <>
@@ -62,6 +62,7 @@ const AdminApp = () => {
           {permissions === "admin" && (
             <>
               <Resource name="customers" {...visitors} />
+              <Resource name="users" {...users} />
               <Resource
                 name="commands"
                 {...orders}

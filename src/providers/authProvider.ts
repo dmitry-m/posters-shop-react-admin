@@ -33,12 +33,14 @@ export const authProvider: MyAuthProvider = {
     inMemoryJWT.setToken(accessToken);
 
     if (user.role !== "admin") {
+      console.log({ redirectTo: "/segments" });
       return Promise.resolve({ redirectTo: "/segments" });
     }
+    console.log({ redirectTo: "/" });
     return Promise.resolve({ redirectTo: "/" });
   },
 
-  signUp: function ({ username, password }) {
+  signUp: function ({ username, password, refetch }) {
     return fetchUtils
       .fetchJson(SIGNUP_URL, {
         method: "POST",
@@ -147,6 +149,7 @@ export const authProvider: MyAuthProvider = {
   getIdentity: () => {
     console.log("checkIdentity");
     const user = localStorage.getItem("user");
+    console.log({ user });
     return user ? Promise.resolve(JSON.parse(user)) : Promise.reject();
   },
 };

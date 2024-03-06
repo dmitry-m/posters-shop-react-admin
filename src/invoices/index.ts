@@ -1,8 +1,8 @@
-import InvoiceIcon from '@mui/icons-material/LibraryBooks';
+import InvoiceIcon from "@mui/icons-material/LibraryBooks";
 
-import InvoiceList from './InvoiceList';
+import InvoiceList from "./InvoiceList";
 
 export default {
-    list: InvoiceList,
-    icon: InvoiceIcon,
+  list: InvoiceList,
+  icon: InvoiceIcon,
 };

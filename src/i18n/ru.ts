@@ -55,7 +55,44 @@ const customRussianMessages: TranslationMessages = {
       },
     },
   },
+
   resources: {
+    users: {
+      name: "Пользователь |||| Пользователи",
+      fields: {
+        id: "Пользователь",
+        email: "Почта",
+        fullName: "ФИО",
+        avatar: "Аватар",
+        role: "Роль",
+      },
+      filters: {
+        last_visited: "Последнее посещение",
+        today: "Сегодня",
+        this_week: "На этой неделе",
+        last_week: "На прошлой неделе",
+        this_month: "В этом месяце",
+        last_month: "В прошлом месяце",
+        earlier: "Ранее",
+        has_ordered: "Уже заказал",
+        has_newsletter: "Новостная рассылка",
+        role: "ГРоль",
+      },
+      fieldGroups: {
+        identity: "Личность",
+        address: "Адрес",
+        stats: "Статистика",
+        history: "История",
+        password: "Пароль",
+        change_password: "Изменить пароль",
+      },
+      page: {
+        delete: "Удалить пользователя",
+      },
+      errors: {
+        password_mismatch: "Подтверждение пароля отличается от пароля.",
+      },
+    },
     customers: {
       name: "Клиент |||| Клиенты",
       fields: {
@@ -240,6 +277,10 @@ const customRussianMessages: TranslationMessages = {
         returns: "Вернулся",
         reviewer: "Рецензент",
       },
+    },
+    roles: {
+      admin: "Администратор",
+      user: "Пользователь",
     },
   },
 };

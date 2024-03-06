@@ -1,22 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { useStore, useTranslate, ToggleThemeButton } from "react-admin";
-import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useStore, useTranslate, ToggleThemeButton, useTheme } from "react-admin";
 
 import { themes, ThemeName } from "./themes";
 
+const ucFirst = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
 export const ThemeSwapper = () => {
-  const [themeName, setThemeName] = useStore<ThemeName>("themeName", "soft");
+  const [themeName, setThemeName] = useStore<ThemeName>(
+    "themeName",
+    (localStorage.getItem("themeName") as ThemeName) || "custom",
+  );
+  const savedThemeColor = localStorage.getItem("themeColor") as "dark" | "light";
+  const [themeColor, setThemeColor] = useTheme(savedThemeColor);
   console.log({ swapper: themeName });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   useEffect(() => {
     setThemeName(themeName);
+    setThemeColor(savedThemeColor);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("themeColor", themeColor as string);
+  }, [themeColor]);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -24,6 +38,7 @@ export const ThemeSwapper = () => {
   const handleChange = (_: React.MouseEvent<HTMLElement>, index: number) => {
     const newTheme = themes[index];
     setThemeName(newTheme.name);
+    localStorage.setItem("themeName", newTheme.name);
     setAnchorEl(null);
   };
   const currentTheme = themes.find((theme) => theme.name === themeName);
@@ -36,11 +51,7 @@ export const ThemeSwapper = () => {
   return (
     <>
       <Tooltip title={toggleThemeTitle} enterDelay={300}>
-        <IconButton
-          onClick={handleClick}
-          color="inherit"
-          aria-label={toggleThemeTitle}
-        >
+        <IconButton onClick={handleClick} color="inherit" aria-label={toggleThemeTitle}>
           <ColorLensIcon />
         </IconButton>
       </Tooltip>
@@ -61,4 +72,4 @@ export const ThemeSwapper = () => {
   );
 };
 
-const ucFirst = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+export default ThemeSwapper;

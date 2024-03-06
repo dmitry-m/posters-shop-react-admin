@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Card, CardHeader, CardContent } from "@mui/material";
 import {
   ResponsiveContainer,
@@ -18,8 +17,7 @@ const lastDay = new Date();
 const lastMonthDays = Array.from({ length: 30 }, (_, i) => subDays(lastDay, i));
 const aMonthAgo = subDays(new Date(), 30);
 
-const dateFormatter = (date: number): string =>
-  new Date(date).toLocaleDateString();
+const dateFormatter = (date: number): string => new Date(date).toLocaleDateString();
 
 const aggregateOrdersByDay = (orders: Order[]): { [key: string]: number } =>
   orders
@@ -55,8 +53,8 @@ const OrderChart = (props: { orders?: Order[] }) => {
             <AreaChart data={getRevenuePerDay(orders)}>
               <defs>
                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#ec407a" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#ec407a" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
@@ -82,7 +80,7 @@ const OrderChart = (props: { orders?: Order[] }) => {
               <Area
                 type="monotone"
                 dataKey="total"
-                stroke="#8884d8"
+                stroke="#ec407a"
                 strokeWidth={2}
                 fill="url(#colorUv)"
               />

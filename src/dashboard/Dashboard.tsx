@@ -1,18 +1,19 @@
-import React, { useMemo, CSSProperties, useEffect } from "react";
-import { useGetList, usePermissions, useRedirect, useStore } from "react-admin";
+/* eslint-disable no-param-reassign */
 import { useMediaQuery, Theme } from "@mui/material";
 import { subDays, startOfDay } from "date-fns";
+import { useMemo, CSSProperties, useEffect } from "react";
+import { useAuthProvider, useGetList, usePermissions, useRedirect } from "react-admin";
 
-import Welcome from "./Welcome";
 import MonthlyRevenue from "./MonthlyRevenue";
 import NbNewOrders from "./NbNewOrders";
-import PendingOrders from "./PendingOrders";
-import PendingReviews from "./PendingReviews";
 import NewCustomers from "./NewCustomers";
 import OrderChart from "./OrderChart";
+import PendingOrders from "./PendingOrders";
+import PendingReviews from "./PendingReviews";
+import Welcome from "./Welcome";
 
+import { MyAuthProvider } from "../providers/authProvider";
 import { Order } from "../types";
-import { ThemeName } from "../themes/themes";
 
 interface OrderStats {
   revenue: number;
@@ -40,9 +41,8 @@ const VerticalSpacer = () => <span style={{ height: "1em" }} />;
 
 const Dashboard = () => {
   const redirect = useRedirect();
-  const isXSmall = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down("sm")
-  );
+  const authProvider = useAuthProvider<MyAuthProvider>();
+  const isXSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
   const aMonthAgo = useMemo(() => subDays(startOfDay(new Date()), 30), []);
   const { data: orders } = useGetList<Order>("commands", {
@@ -50,12 +50,15 @@ const Dashboard = () => {
     sort: { field: "date", order: "DESC" },
     pagination: { page: 1, perPage: 50 },
   });
-  const { isLoading, permissions } = usePermissions();
+  const { refetch, isLoading, permissions } = usePermissions<"admin" | "user">();
+
   useEffect(() => {
-    if (!isLoading && permissions !== "admin") {
-      redirect("/segments");
-    }
-  }, [permissions, isLoading, redirect]);
+    void authProvider.getPermissions({}).then((role: string) => {
+      void refetch();
+      if (role === "admin") redirect("/");
+      else redirect("/segments");
+    });
+  }, []);
 
   const aggregation = useMemo<State>(() => {
     if (!orders) return {};
@@ -65,7 +68,7 @@ const Dashboard = () => {
         (stats: OrderStats, order) => {
           if (order.status !== "revoked") {
             stats.revenue += order.total;
-            stats.nbNewOrders++;
+            stats.nbNewOrders += 1;
           }
           if (order.status === "ordered") {
             stats.pendingOrders.push(order);
@@ -76,7 +79,7 @@ const Dashboard = () => {
           revenue: 0,
           nbNewOrders: 0,
           pendingOrders: [],
-        }
+        },
       );
     return {
       recentOrders: orders,
@@ -92,10 +95,13 @@ const Dashboard = () => {
   }, [orders]);
 
   const { nbNewOrders, pendingOrders, revenue, recentOrders } = aggregation;
-  return isLoading ? (
-    <div>Waiting for permissions...</div>
-  ) : permissions === "admin" ? (
-    isXSmall ? (
+  if (isLoading) {
+    return <div>Waiting for permissions...</div>;
+  }
+
+  if (permissions !== "admin") return null;
+  if (isXSmall) {
+    return (
       <div>
         <div style={styles.flexColumn as CSSProperties}>
           <Welcome />
@@ -106,7 +112,11 @@ const Dashboard = () => {
           <PendingOrders orders={pendingOrders} />
         </div>
       </div>
-    ) : isSmall ? (
+    );
+  }
+
+  if (isSmall) {
+    return (
       <div style={styles.flexColumn as CSSProperties}>
         <div style={styles.singleCol}>
           <Welcome />
@@ -123,35 +133,35 @@ const Dashboard = () => {
           <PendingOrders orders={pendingOrders} />
         </div>
       </div>
-    ) : (
-      <>
-        <Welcome />
-        <div style={styles.flex}>
-          <div style={styles.leftCol}>
-            <div style={styles.flex}>
-              <MonthlyRevenue value={revenue} />
-              <Spacer />
-              <NbNewOrders value={nbNewOrders} />
-            </div>
-            <div style={styles.singleCol}>
-              <OrderChart orders={recentOrders} />
-            </div>
-            <div style={styles.singleCol}>
-              <PendingOrders orders={pendingOrders} />
-            </div>
+    );
+  }
+
+  return (
+    <>
+      <Welcome />
+      <div style={styles.flex}>
+        <div style={styles.leftCol}>
+          <div style={styles.flex}>
+            <MonthlyRevenue value={revenue} />
+            <Spacer />
+            <NbNewOrders value={nbNewOrders} />
           </div>
-          <div style={styles.rightCol}>
-            <div style={styles.flex}>
-              <PendingReviews />
-              <Spacer />
-              <NewCustomers />
-            </div>
+          <div style={styles.singleCol}>
+            <OrderChart orders={recentOrders} />
+          </div>
+          <div style={styles.singleCol}>
+            <PendingOrders orders={pendingOrders} />
           </div>
         </div>
-      </>
-    )
-  ) : (
-    <> </>
+        <div style={styles.rightCol}>
+          <div style={styles.flex}>
+            <PendingReviews />
+            <Spacer />
+            <NewCustomers />
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Link, useAuthProvider, useRedirect } from "react-admin";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Avatar,
@@ -16,10 +15,13 @@ import {
   useNotify,
   required,
   minLength,
+  Link,
+  useAuthProvider,
+  useRedirect,
 } from "react-admin";
-
 import Box from "@mui/material/Box";
 import { MyAuthProvider } from "../providers/authProvider";
+import CustomPage from "./CustomPage";
 
 const passwordRepeatValidation = (
   value: string,
@@ -36,10 +38,6 @@ const Register = () => {
   const redirect = useRedirect();
   const notify = useNotify();
   const authProvider = useAuthProvider<MyAuthProvider>();
-
-  useEffect(() => {
-    localStorage.getItem("user") && redirect("/");
-  });
 
   const handleSubmit = (auth: FormValues) => {
     console.log({ auth });
@@ -78,98 +76,111 @@ const Register = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} mode="onBlur" reValidateMode="onBlur">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          background: "url(https://source.unsplash.com/featured/1600x900)",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-      >
-        <Card sx={{ minWidth: 300, marginTop: "6em" }}>
-          <Box
-            sx={{
-              margin: "1em",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Avatar sx={{ bgcolor: "secondary.main" }}>
-              <LockIcon />
-            </Avatar>
-          </Box>
-          <Box
-            sx={{
-              marginTop: "1em",
-              display: "flex",
-              justifyContent: "center",
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            Hint: demo / demo
-          </Box>
-          <Box sx={{ padding: "0 1em 1em 1em" }}>
-            <Box sx={{ marginTop: "1em" }}>
-              <TextInput
-                autoFocus
-                source="username"
-                label={translate("ra.auth.username")}
-                disabled={loading}
-                validate={required()}
-                fullWidth
-              />
-            </Box>
-            <Box sx={{ marginTop: "1em" }}>
-              <TextInput
-                source="password"
-                label={translate("ra.auth.password")}
-                type="password"
-                disabled={loading}
-                validate={[required(), minLength(6)]}
-                fullWidth
-              />
-            </Box>
-            <Box sx={{ marginTop: "1em" }}>
-              <TextInput
-                source="password_repeat"
-                label={translate("pos.auth.password_repeat")}
-                type="password"
-                disabled={loading}
-                validate={[required(), minLength(6), passwordRepeatValidation]}
-                fullWidth
-              />
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              marginTop: "1em",
-              display: "flex",
-              justifyContent: "center",
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <Link to="/login"> {translate("ra.auth.sign_in")}</Link>
-          </Box>
-          <CardActions sx={{ padding: "0 1em 1em 1em" }}>
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              disabled={loading}
-              fullWidth
+    <CustomPage>
+      <Form onSubmit={handleSubmit} mode="onBlur" reValidateMode="onBlur">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            background: "url(https://source.unsplash.com/featured/1600x900)",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}
+        >
+          <Card sx={{ minWidth: 400, marginTop: "6em" }}>
+            <Box
+              sx={{
+                margin: "1em",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              {loading && <CircularProgress size={25} thickness={2} />}
-              {translate("pos.auth.register")}
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-    </Form>
+              <Avatar sx={{ bgcolor: "secondary.main" }}>
+                <LockIcon />
+              </Avatar>
+            </Box>
+            <Box
+              sx={{
+                marginTop: "1em",
+                display: "flex",
+                justifyContent: "center",
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              Hint: demo / demo
+            </Box>
+            <Box sx={{ padding: "0 1em 1em 1em" }}>
+              <Box sx={{ marginTop: "1em" }}>
+                <TextInput
+                  autoFocus
+                  source="username"
+                  label={translate("ra.auth.username")}
+                  disabled={loading}
+                  validate={required()}
+                  fullWidth
+                />
+              </Box>
+              <Box sx={{ marginTop: "1em" }}>
+                <TextInput
+                  source="password"
+                  label={translate("ra.auth.password")}
+                  type="password"
+                  disabled={loading}
+                  validate={[required(), minLength(6)]}
+                  fullWidth
+                />
+              </Box>
+              <Box sx={{ marginTop: "1em" }}>
+                <TextInput
+                  source="password_repeat"
+                  label={translate("pos.auth.password_repeat")}
+                  type="password"
+                  disabled={loading}
+                  validate={[
+                    required(),
+                    minLength(6),
+                    passwordRepeatValidation,
+                  ]}
+                  fullWidth
+                />
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                marginTop: "1em",
+                display: "flex",
+                justifyContent: "center",
+                color: (theme) => theme.palette.grey[500],
+              }}
+            ></Box>
+            <CardActions sx={{ padding: "0 1em 1em 1em" }}>
+              <Button
+                variant="contained"
+                type="submit"
+                color="primary"
+                disabled={loading}
+                fullWidth
+              >
+                {loading && <CircularProgress size={25} thickness={2} />}
+                {translate("pos.auth.register")}
+              </Button>
+              <Button
+                variant="outlined"
+                type="button"
+                color="primary"
+                fullWidth
+              >
+                {loading && <CircularProgress size={25} thickness={2} />}
+                <Link to="/login"> {translate("ra.auth.sign_in")}</Link>
+              </Button>
+            </CardActions>
+          </Card>
+        </Box>
+      </Form>
+    </CustomPage>
   );
 };
 
