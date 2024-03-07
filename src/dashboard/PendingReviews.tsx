@@ -1,16 +1,7 @@
-import * as React from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from "@mui/material";
 import CommentIcon from "@mui/icons-material/Comment";
-import { Link } from "react-router-dom";
-
+import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import queryString from "query-string";
+import * as React from "react";
 import {
   ReferenceField,
   FunctionField,
@@ -18,10 +9,10 @@ import {
   useTranslate,
   useIsDataLoaded,
 } from "react-admin";
-
-import { stringify } from "query-string";
+import { Link } from "react-router-dom";
 
 import CardWithIcon from "./CardWithIcon";
+
 import StarRatingField from "../reviews/StarRatingField";
 import { Customer, Review } from "../types";
 
@@ -43,7 +34,7 @@ const PendingReviews = () => {
   // if the first customer is loaded, then all the customers are loaded.
   const isCustomerDataLoaded = useIsDataLoaded(
     ["customers", "getMany", { ids: [String(reviews?.[0].customer_id)] }],
-    { enabled: !isLoading && reviews && reviews.length > 0 }
+    { enabled: !isLoading && reviews && reviews.length > 0 },
   );
   const display = isLoading || !isCustomerDataLoaded ? "none" : "block";
 
@@ -51,7 +42,7 @@ const PendingReviews = () => {
     <CardWithIcon
       to={{
         pathname: "/reviews",
-        search: stringify({
+        search: queryString.stringify({
           filter: JSON.stringify({ status: "pending" }),
         }),
       }}
@@ -105,13 +96,7 @@ const PendingReviews = () => {
         ))}
       </List>
       <Box flexGrow={1}>&nbsp;</Box>
-      <Button
-        sx={{ borderRadius: 0 }}
-        component={Link}
-        to="/reviews"
-        size="small"
-        color="primary"
-      >
+      <Button sx={{ marginBottom: 1 }} component={Link} to="/reviews" size="small" color="primary">
         <Box p={1} sx={{ color: "primary.main" }}>
           {translate("pos.dashboard.all_reviews")}
         </Box>

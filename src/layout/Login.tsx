@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
-import { Link, usePermissions, useRedirect } from "react-admin";
-
-import PropTypes from "prop-types";
-import { useLocation } from "react-router-dom";
+import LockIcon from "@mui/icons-material/Lock";
 import {
   Avatar,
   Button,
   Card,
   CardActions,
   CircularProgress,
+  Theme,
+  useMediaQuery,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import LockIcon from "@mui/icons-material/Lock";
+import { useEffect, useState } from "react";
 import {
+  useRedirect,
   Form,
   TextInput,
   useTranslate,
@@ -20,6 +19,8 @@ import {
   useNotify,
   required,
 } from "react-admin";
+import { useLocation, Link } from "react-router-dom";
+
 import CustomPage from "./CustomPage";
 
 const Login = () => {
@@ -29,42 +30,38 @@ const Login = () => {
   const notify = useNotify();
   const login = useLogin();
   const location = useLocation();
-  // const { refetch } = usePermissions();
+  const isXSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+
   useEffect(() => {
-    localStorage.getItem("user") && redirect("/");
+    const user = localStorage.getItem("user");
+    if (user) {
+      redirect("/");
+    }
   });
 
-  const handleSubmit = (auth: FormValues) => {
+  const handleSubmit = async (auth: FormValues) => {
     console.log({ auth });
     setLoading(true);
-    login(
-      auth,
-      location.state ? (location.state as any).nextPathname : "/"
-    ).catch((error: Error) => {
+    try {
+      await login(auth, (location.state as { nextPathname?: string })?.nextPathname || "/");
+    } catch (error) {
       setLoading(false);
-      notify(
-        typeof error === "string"
-          ? error
-          : typeof error === "undefined" || !error.message
-          ? "pos.auth.register_error"
-          : Array.isArray(error.message)
+      let errorString: string;
+      if (error instanceof Error) {
+        const errorMessage: string = Array.isArray(error.message)
           ? error.message.join(", ")
-          : error.message,
-        {
-          type: "error",
-          messageArgs: {
-            _:
-              typeof error === "string"
-                ? error
-                : error && error.message
-                ? error.message
-                : undefined,
-          },
-        }
-      );
-    });
-    console.log("refetch");
-    // refetch();
+          : error.message || "pos.auth.register_error";
+        errorString = typeof error === "string" ? error : errorMessage;
+      } else {
+        errorString = "pos.auth.register_error";
+      }
+      notify(errorString, {
+        type: "error",
+        messageArgs: {
+          _: errorString,
+        },
+      });
+    }
   };
 
   return (
@@ -73,7 +70,7 @@ const Login = () => {
         <Box
           sx={{
             alignItems: "center",
-            background: "url(https://source.unsplash.com/featured/1600x900)",
+            background: `url(https://source.unsplash.com/random/${isXSmall ? "600x900" : "1920x1080"})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             display: "flex",
@@ -82,7 +79,7 @@ const Login = () => {
             minHeight: "100vh",
           }}
         >
-          <Card sx={{ minWidth: 400, marginTop: "6em" }}>
+          <Card sx={{ minWidth: isXSmall ? 320 : 400, marginTop: "8em !important" }}>
             <Box
               sx={{
                 margin: "1em",
@@ -135,7 +132,7 @@ const Login = () => {
                 justifyContent: "center",
                 color: (theme) => theme.palette.grey[500],
               }}
-            ></Box>
+            />
             <CardActions sx={{ padding: "0 1em 1em 1em" }}>
               <Button
                 variant="contained"
@@ -147,15 +144,9 @@ const Login = () => {
                 {loading && <CircularProgress size={25} thickness={2} />}
                 {translate("ra.auth.sign_in")}
               </Button>
-              <Button
-                variant="outlined"
-                type="button"
-                color="primary"
-                fullWidth
-                sx={{ padding: "0" }}
-              >
+              <Button component={Link} to="/register" variant="outlined" color="primary" fullWidth>
                 {loading && <CircularProgress size={25} thickness={2} />}
-                <Link to="/register"> {translate("pos.auth.register")}</Link>
+                {translate("pos.auth.register")}
               </Button>
             </CardActions>
           </Card>
@@ -163,11 +154,6 @@ const Login = () => {
       </Form>
     </CustomPage>
   );
-};
-
-Login.propTypes = {
-  authProvider: PropTypes.func,
-  previousRoute: PropTypes.string,
 };
 
 export default Login;

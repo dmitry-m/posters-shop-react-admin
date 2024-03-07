@@ -1,3 +1,4 @@
+import { Grid, Box, Typography } from "@mui/material";
 import * as React from "react";
 import {
   DateInput,
@@ -8,7 +9,6 @@ import {
   SimpleForm,
   useTranslate,
 } from "react-admin";
-import { Grid, Box, Typography } from "@mui/material";
 
 import FullNameField from "./FullNameField";
 import { validateForm } from "./UserCreate";

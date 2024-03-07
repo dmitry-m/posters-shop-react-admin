@@ -1,12 +1,20 @@
-import { Avatar, Box, Button } from "@mui/material";
+/* eslint-disable react/jsx-no-useless-fragment */
 import CustomerIcon from "@mui/icons-material/PersonAdd";
-import { Link } from "react-router-dom";
-import { ListBase, WithListContext, SimpleList, useTranslate } from "react-admin";
+import { Avatar, Box, Button } from "@mui/material";
 import { subDays } from "date-fns";
+import { ListBase, WithListContext, SimpleList, useTranslate } from "react-admin";
+import { Link } from "react-router-dom";
 
 import CardWithIcon from "./CardWithIcon";
+
 import { Customer } from "../types";
 
+const renderAvatar = (customer: Customer) => (
+  <Avatar
+    src={`${customer.avatar}?size=32x32`}
+    alt={`${customer.first_name} ${customer.last_name}`}
+  />
+);
 const NewCustomers = () => {
   const translate = useTranslate();
 
@@ -34,18 +42,10 @@ const NewCustomers = () => {
         title={translate("pos.dashboard.new_customers")}
         subtitle={<WithListContext render={({ total }) => <>{total}</>} />}
       >
-        <SimpleList<Customer>
-          primaryText="%{first_name} %{last_name}"
-          leftAvatar={(customer) => (
-            <Avatar
-              src={`${customer.avatar}?size=32x32`}
-              alt={`${customer.first_name} ${customer.last_name}`}
-            />
-          )}
-        />
+        <SimpleList<Customer> primaryText="%{first_name} %{last_name}" leftAvatar={renderAvatar} />
         <Box flexGrow={1}>&nbsp;</Box>
         <Button
-          sx={{ borderRadius: 0 }}
+          sx={{ marginBottom: 1 }}
           component={Link}
           to="/customers"
           size="small"

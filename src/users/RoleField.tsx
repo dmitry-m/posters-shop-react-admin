@@ -1,20 +1,17 @@
-import * as React from "react";
 import { Stack, Chip } from "@mui/material";
+import * as React from "react";
 import { FieldProps, useTranslate, useRecordContext } from "react-admin";
-import { Customer } from "../types";
+
+import { User } from "../types";
 
 const RoleField = (_: FieldProps) => {
   const translate = useTranslate();
-  const record = useRecordContext<Customer>();
+  const record = useRecordContext<User>();
   if (!record || !record.role) {
     return null;
   }
   return (
-    <Chip
-      size="small"
-      key={record.role}
-      label={translate("roles." + record.role)}
-    />
+    <Chip size="small" key={record.role} label={translate(`resources.roles.${record.role}`)} />
   );
 };
 
