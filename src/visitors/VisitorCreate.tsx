@@ -1,3 +1,4 @@
+import { Box, Typography } from "@mui/material";
 import * as React from "react";
 import {
   Create,
@@ -8,11 +9,8 @@ import {
   PasswordInput,
   email,
 } from "react-admin";
-import { Box, Typography } from "@mui/material";
 
-export const validateForm = (
-  values: Record<string, any>
-): Record<string, any> => {
+export const validateForm = (values: Record<string, any>): Record<string, any> => {
   const errors = {} as any;
   if (!values.first_name) {
     errors.first_name = "ra.validation.required";
@@ -85,7 +83,7 @@ const SectionTitle = ({ label }: { label: string }) => {
 
   return (
     <Typography variant="h6" gutterBottom>
-      {translate(label as string)}
+      {translate(label)}
     </Typography>
   );
 };

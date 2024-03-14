@@ -44,13 +44,7 @@ const NewCustomers = () => {
       >
         <SimpleList<Customer> primaryText="%{first_name} %{last_name}" leftAvatar={renderAvatar} />
         <Box flexGrow={1}>&nbsp;</Box>
-        <Button
-          sx={{ marginBottom: 1 }}
-          component={Link}
-          to="/customers"
-          size="small"
-          color="primary"
-        >
+        <Button component={Link} to="/customers" size="small" color="primary">
           <Box p={1} sx={{ color: "primary.main" }}>
             {translate("pos.dashboard.all_customers")}
           </Box>

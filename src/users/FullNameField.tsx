@@ -1,19 +1,22 @@
-import * as React from "react";
 import { SxProps, Typography } from "@mui/material";
+import * as React from "react";
 import { memo } from "react";
-
 import { FieldProps, useRecordContext } from "react-admin";
-import AvatarField from "./AvatarField";
-import { Customer } from "../types";
 
-interface Props extends FieldProps<Customer> {
+import AvatarField from "./AvatarField";
+
+import { User } from "../types";
+
+interface Props extends FieldProps<User> {
   size?: string;
   sx?: SxProps;
+  label?: string;
+  source?: string;
 }
 
 const FullNameField = (props: Props) => {
   const { size } = props;
-  const record = useRecordContext<Customer>();
+  const record = useRecordContext<User>();
   return record ? (
     <Typography
       variant="body2"
@@ -40,6 +43,8 @@ const FullNameField = (props: Props) => {
 FullNameField.defaultProps = {
   source: "fullName" as const,
   label: "resources.users.fields.name",
+  size: "small",
+  sx: {},
 };
 
 export default memo<Props>(FullNameField);

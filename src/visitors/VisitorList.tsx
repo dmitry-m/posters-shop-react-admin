@@ -1,3 +1,4 @@
+import { useMediaQuery, Theme } from "@mui/material";
 import * as React from "react";
 import {
   BooleanField,
@@ -9,17 +10,16 @@ import {
   NumberField,
   SearchInput,
 } from "react-admin";
-import { useMediaQuery, Theme } from "@mui/material";
 
-import SegmentsField from "./SegmentsField";
-import SegmentInput from "./SegmentInput";
-import CustomerLinkField from "./CustomerLinkField";
 import ColoredNumberField from "./ColoredNumberField";
+import CustomerLinkField from "./CustomerLinkField";
 import MobileGrid from "./MobileGrid";
+import SegmentInput from "./SegmentInput";
+import SegmentsField from "./SegmentsField";
 import VisitorListAside from "./VisitorListAside";
 
 const visitorFilters = [
-  <SearchInput source="q" alwaysOn />,
+  <SearchInput source="search" alwaysOn />,
   <DateInput source="last_seen_gte" />,
   <NullableBooleanInput source="has_ordered" />,
   <NullableBooleanInput source="has_newsletter" defaultValue />,
@@ -27,9 +27,7 @@ const visitorFilters = [
 ];
 
 const VisitorList = () => {
-  const isXsmall = useMediaQuery<Theme>((theme) =>
-    theme.breakpoints.down("sm")
-  );
+  const isXsmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("sm"));
   const isSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("md"));
   return (
     <List
@@ -53,10 +51,7 @@ const VisitorList = () => {
         >
           <CustomerLinkField />
           <DateField source="last_seen" />
-          <NumberField
-            source="nb_commands"
-            label="resources.customers.fields.commands"
-          />
+          <NumberField source="nb_commands" label="resources.customers.fields.commands" />
           <ColoredNumberField
             source="total_spent"
             options={{ style: "currency", currency: "USD" }}

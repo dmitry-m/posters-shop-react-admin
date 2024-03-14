@@ -2,22 +2,24 @@ import * as React from "react";
 import { Link, FieldProps, useRecordContext } from "react-admin";
 
 import FullNameField from "./FullNameField";
+
 import { Customer } from "../types";
 
-const CustomerLinkField = (_: FieldProps<Customer>) => {
+const CustomerLinkField = (_: FieldProps<Customer>): JSX.Element => {
   const record = useRecordContext<Customer>();
   if (!record) {
-    return null;
+    return <> </>;
   }
   return (
     <Link to={`/customers/${record.id}`}>
-      <FullNameField />
+      <FullNameField size="25" />
     </Link>
   );
 };
 
 CustomerLinkField.defaultProps = {
-  source: "customer_id",
+  source: "id",
+  label: "resources.customers.fields.name",
 };
 
 export default CustomerLinkField;

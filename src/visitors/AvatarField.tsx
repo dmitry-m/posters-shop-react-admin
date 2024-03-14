@@ -1,6 +1,7 @@
-import * as React from "react";
 import { Avatar, SxProps } from "@mui/material";
+import * as React from "react";
 import { FieldProps, useRecordContext } from "react-admin";
+
 import { Customer } from "../types";
 
 interface Props extends FieldProps<Customer> {
@@ -8,9 +9,9 @@ interface Props extends FieldProps<Customer> {
   size?: string;
 }
 
-const AvatarField = ({ size = "25", sx }: Props) => {
+const AvatarField = ({ size = "25", sx }: Props): JSX.Element => {
   const record = useRecordContext<Customer>();
-  if (!record) return null;
+  if (!record) return <> </>;
   return (
     <Avatar
       src={`${record.avatar}?size=${size}x${size}`}

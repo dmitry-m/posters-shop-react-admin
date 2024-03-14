@@ -1,5 +1,5 @@
-import { TranslationMessages } from "react-admin";
 import russianMessages from "ra-language-russian";
+import { TranslationMessages } from "react-admin";
 
 const customRussianMessages: TranslationMessages = {
   ...russianMessages,
@@ -28,12 +28,10 @@ const customRussianMessages: TranslationMessages = {
       all_customers: "Показать всех клиентов",
       pending_orders: "Ожидающие заказы",
       order: {
-        items:
-          "от %{customer_name}, плакат |||| от %{customer_name}, %{nb_items} плаката",
+        items: "от %{customer_name}, плакат |||| от %{customer_name}, %{nb_items} плаката",
       },
       welcome: {
-        title:
-          "Добро пожаловать в демонстрацию электронной коммерции react-admin",
+        title: "Добро пожаловать в демонстрацию электронной коммерции react-admin",
         subtitle:
           "Это административный интерфейс вымышленного магазина плакатов. Не стесняйтесь исследовать и изменять данные. Демонстрация работает локально в вашем браузере и сбрасывается при каждой перезагрузке страницы.",
         ra_button: "Веб-сайт react-admin",
@@ -60,7 +58,7 @@ const customRussianMessages: TranslationMessages = {
     users: {
       name: "Пользователь |||| Пользователи",
       fields: {
-        id: "Пользователь",
+        name: "Пользователь",
         email: "Почта",
         fullName: "ФИО",
         avatar: "Аватар",

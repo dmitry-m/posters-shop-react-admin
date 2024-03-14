@@ -1,5 +1,5 @@
-import { TranslationMessages } from "react-admin";
 import englishMessages from "ra-language-english";
+import { TranslationMessages } from "react-admin";
 
 const customEnglishMessages: TranslationMessages = {
   ...englishMessages,
@@ -28,8 +28,7 @@ const customEnglishMessages: TranslationMessages = {
       all_customers: "See all customers",
       pending_orders: "Pending Orders",
       order: {
-        items:
-          "by %{customer_name}, one item |||| by %{customer_name}, %{nb_items} items",
+        items: "by %{customer_name}, one item |||| by %{customer_name}, %{nb_items} items",
       },
       welcome: {
         title: "Welcome to the react-admin e-commerce demo",
@@ -57,7 +56,7 @@ const customEnglishMessages: TranslationMessages = {
     users: {
       name: "User |||| Users",
       fields: {
-        id: "User",
+        name: "User",
         email: "Email",
         fullName: "Full name",
         avatar: "Avatar",
@@ -84,11 +83,10 @@ const customEnglishMessages: TranslationMessages = {
         change_password: "Change Password",
       },
       page: {
-        delete: "Delete Customer",
+        delete: "Delete User",
       },
       errors: {
-        password_mismatch:
-          "The password confirmation is not the same as the password.",
+        password_mismatch: "The password confirmation is not the same as the password.",
       },
     },
     customers: {
@@ -129,8 +127,7 @@ const customEnglishMessages: TranslationMessages = {
         delete: "Delete Customer",
       },
       errors: {
-        password_mismatch:
-          "The password confirmation is not the same as the password.",
+        password_mismatch: "The password confirmation is not the same as the password.",
       },
     },
     commands: {
