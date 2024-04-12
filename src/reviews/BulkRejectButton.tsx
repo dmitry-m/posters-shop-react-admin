@@ -19,7 +19,7 @@ const BulkRejectButton = () => {
 
   const [updateMany, { isLoading }] = useUpdateMany(
     "reviews",
-    { ids: selectedIds, data: { status: "rejected" } },
+    { ids: selectedIds, data: { status: "REJECTED" } },
     {
       mutationMode: "undoable",
       onSuccess: () => {
@@ -34,7 +34,7 @@ const BulkRejectButton = () => {
           type: "error",
         });
       },
-    }
+    },
   );
 
   return (

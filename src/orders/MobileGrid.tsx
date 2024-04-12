@@ -1,6 +1,6 @@
 // in src/comments.js
-import * as React from "react";
 import { Box, Card, CardHeader, CardContent, Typography } from "@mui/material";
+import * as React from "react";
 import {
   DateField,
   EditButton,
@@ -12,8 +12,8 @@ import {
   RecordContextProvider,
 } from "react-admin";
 
-import CustomerReferenceField from "../visitors/CustomerReferenceField";
 import { Order } from "../types";
+import CustomerReferenceField from "../visitors/CustomerReferenceField";
 
 const MobileGrid = () => {
   const { data, isLoading } = useListContext<Order>();

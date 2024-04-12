@@ -1,4 +1,4 @@
-import { Stack, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
 import * as React from "react";
 import { FieldProps, useTranslate, useRecordContext } from "react-admin";
 
@@ -11,7 +11,11 @@ const RoleField = (_: FieldProps) => {
     return null;
   }
   return (
-    <Chip size="small" key={record.role} label={translate(`resources.roles.${record.role}`)} />
+    <Chip
+      size="small"
+      key={record.role}
+      label={translate(`resources.users.roles.${record.role}`)}
+    />
   );
 };
 

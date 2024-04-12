@@ -1,7 +1,8 @@
-import { jwtDecode } from "jwt-decode";
 import { Mutex, MutexInterface } from "async-mutex";
-import { User } from "../types";
+import { jwtDecode } from "jwt-decode";
 import { fetchUtils } from "react-admin";
+
+import { User } from "../types";
 
 const mutex: MutexInterface = new Mutex();
 
@@ -11,10 +12,12 @@ interface AuthInterface extends User {
 
 export default class TokenManager {
   private inMemoryJWT: string | null = null;
+
   private refreshEndpoint: string;
+
   private refreshInterval: number | undefined = undefined;
 
-  constructor(refreshEndpoint: string = "token") {
+  constructor(refreshEndpoint = "token") {
     this.refreshEndpoint = refreshEndpoint;
   }
 
@@ -25,11 +28,14 @@ export default class TokenManager {
       window.clearInterval(this.refreshInterval);
     }
     console.log("timer init");
-    this.refreshInterval = window.setInterval(async () => {
-      const auth = await this.fetchAuth.bind(this)();
-      if (auth) return this.setToken.bind(this)(auth.accessToken);
-      return this.eraseTokens.bind(this)();
-    }, (delay - 5) * 1000); // Validity period of the token in seconds, minus 5 seconds
+    this.refreshInterval = window.setInterval(
+      async () => {
+        const auth = await this.fetchAuth.bind(this)();
+        if (auth) return this.setToken.bind(this)(auth.accessToken);
+        this.eraseToken.bind(this)();
+      },
+      (delay - 5) * 1000,
+    ); // Validity period of the token in seconds, minus 5 seconds
   }
 
   public async fetchAuth(): Promise<AuthInterface | null> {
@@ -63,10 +69,10 @@ export default class TokenManager {
       try {
         const auth = await this.fetchAuth();
         if (auth) return this.setToken(auth.accessToken);
-        return this.eraseTokens();
+        return this.eraseToken();
       } catch (error) {
         console.error(error);
-        this.eraseTokens();
+        this.eraseToken();
         if (error instanceof Error) return error.message;
       } finally {
         release();
@@ -91,7 +97,7 @@ export default class TokenManager {
     return this.inMemoryJWT;
   }
 
-  public async eraseTokens(): Promise<null> {
+  public eraseToken(): null {
     this.inMemoryJWT = null;
     window.clearInterval(this.refreshInterval);
 

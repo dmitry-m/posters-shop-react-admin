@@ -9,19 +9,19 @@ import {
 } from "react-admin";
 import { Route } from "react-router";
 
-import { authProvider, dataProvider } from "./providers";
 import categories from "./categories";
 import { Dashboard } from "./dashboard";
+import { i18nProvider } from "./i18n";
 import invoices from "./invoices";
 import { Layout, Login, Register } from "./layout";
 import orders from "./orders";
 import products from "./products";
+import { authProvider, dataProvider } from "./providers";
 import reviews from "./reviews";
 import Segments from "./segments/Segments";
-import visitors from "./visitors";
-import users from "./users";
 import { themes, ThemeName } from "./themes/themes";
-import { i18nProvider } from "./i18n";
+import users from "./users";
+import visitors from "./visitors";
 
 const store = localStorageStore(undefined, "React Admin Panel");
 
@@ -63,11 +63,7 @@ const AdminApp = () => {
             <>
               <Resource name="customers" {...visitors} />
               <Resource name="users" {...users} />
-              <Resource
-                name="commands"
-                {...orders}
-                options={{ label: "Orders" }}
-              />
+              <Resource name="commands" {...orders} options={{ label: "Orders" }} />
               <Resource name="invoices" {...invoices} />
               <Resource name="products" {...products} />
               <Resource name="categories" {...categories} />

@@ -2,7 +2,14 @@
 import { useMediaQuery, Theme } from "@mui/material";
 import { subDays, startOfDay } from "date-fns";
 import { useMemo, CSSProperties, useEffect } from "react";
-import { useAuthProvider, useGetList, usePermissions, useRedirect } from "react-admin";
+import {
+  Title,
+  useAuthProvider,
+  useGetIdentity,
+  useGetList,
+  usePermissions,
+  useRedirect,
+} from "react-admin";
 
 import MonthlyRevenue from "./MonthlyRevenue";
 import NbNewOrders from "./NbNewOrders";
@@ -40,37 +47,33 @@ const Spacer = () => <span style={{ width: "1em" }} />;
 const VerticalSpacer = () => <span style={{ height: "1em" }} />;
 
 const Dashboard = () => {
-  const redirect = useRedirect();
-  const authProvider = useAuthProvider<MyAuthProvider>();
+  const { isLoading, permissions } = usePermissions<"admin" | "user">();
   const isXSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
   const isSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
   const aMonthAgo = useMemo(() => subDays(startOfDay(new Date()), 30), []);
-  const { data: orders } = useGetList<Order>("commands", {
-    filter: { date_gte: aMonthAgo.toISOString() },
-    sort: { field: "date", order: "DESC" },
-    pagination: { page: 1, perPage: 50 },
-  });
-  const { refetch, isLoading, permissions } = usePermissions<"admin" | "user">();
-
-  useEffect(() => {
-    void authProvider.getPermissions({}).then((role: string) => {
-      void refetch();
-      if (role === "admin") redirect("/");
-      else redirect("/segments");
-    });
-  }, []);
+  const { data: orders } = useGetList<Order>(
+    "commands",
+    {
+      filter: { date_gte: aMonthAgo.toISOString() },
+      sort: { field: "date", order: "DESC" },
+      pagination: { page: 1, perPage: 50 },
+    },
+    {
+      enabled: permissions === "admin",
+    },
+  );
 
   const aggregation = useMemo<State>(() => {
     if (!orders) return {};
     const aggregations = orders
-      .filter((order) => order.status !== "revoked")
+      .filter((order) => order.status !== "REVOKED")
       .reduce(
         (stats: OrderStats, order) => {
-          if (order.status !== "revoked") {
+          if (order.status !== "REVOKED") {
             stats.revenue += order.total;
             stats.nbNewOrders += 1;
           }
-          if (order.status === "ordered") {
+          if (order.status === "ORDERED") {
             stats.pendingOrders.push(order);
           }
           return stats;
@@ -95,11 +98,12 @@ const Dashboard = () => {
   }, [orders]);
 
   const { nbNewOrders, pendingOrders, revenue, recentOrders } = aggregation;
+
   if (isLoading) {
     return <div>Waiting for permissions...</div>;
   }
 
-  if (permissions !== "admin") return null;
+  if (permissions !== "admin") return <Welcome />;
   if (isXSmall) {
     return (
       <div>
@@ -138,6 +142,7 @@ const Dashboard = () => {
 
   return (
     <>
+      <Title title="ra.page.dashboard" />
       <Welcome />
       <div style={styles.flex}>
         <div style={styles.leftCol}>

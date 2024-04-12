@@ -1,22 +1,11 @@
-import * as React from "react";
-import { Card, CardContent } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOnOutlined";
-import MailIcon from "@mui/icons-material/MailOutline";
 import LocalOfferIcon from "@mui/icons-material/LocalOfferOutlined";
-import {
-  FilterList,
-  FilterListItem,
-  FilterLiveSearch,
-  SavedQueriesList,
-} from "react-admin";
-import {
-  endOfYesterday,
-  startOfWeek,
-  subWeeks,
-  startOfMonth,
-  subMonths,
-} from "date-fns";
+import MailIcon from "@mui/icons-material/MailOutline";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { Card, CardContent } from "@mui/material";
+import { endOfYesterday, startOfWeek, subWeeks, startOfMonth, subMonths } from "date-fns";
+import * as React from "react";
+import { FilterList, FilterListItem, FilterLiveSearch, SavedQueriesList } from "react-admin";
 
 import segments from "../segments/data";
 
@@ -39,10 +28,7 @@ const Aside = () => (
 
       <SavedQueriesList />
 
-      <FilterList
-        label="resources.customers.filters.last_visited"
-        icon={<AccessTimeIcon />}
-      >
+      <FilterList label="resources.customers.filters.last_visited" icon={<AccessTimeIcon />}>
         <FilterListItem
           label="resources.customers.filters.today"
           value={{
@@ -87,10 +73,7 @@ const Aside = () => (
         />
       </FilterList>
 
-      <FilterList
-        label="resources.customers.filters.has_ordered"
-        icon={<MonetizationOnIcon />}
-      >
+      <FilterList label="resources.customers.filters.has_ordered" icon={<MonetizationOnIcon />}>
         <FilterListItem
           label="ra.boolean.true"
           value={{
@@ -107,30 +90,14 @@ const Aside = () => (
         />
       </FilterList>
 
-      <FilterList
-        label="resources.customers.filters.has_newsletter"
-        icon={<MailIcon />}
-      >
-        <FilterListItem
-          label="ra.boolean.true"
-          value={{ has_newsletter: true }}
-        />
-        <FilterListItem
-          label="ra.boolean.false"
-          value={{ has_newsletter: false }}
-        />
+      <FilterList label="resources.customers.filters.has_newsletter" icon={<MailIcon />}>
+        <FilterListItem label="ra.boolean.true" value={{ has_newsletter: true }} />
+        <FilterListItem label="ra.boolean.false" value={{ has_newsletter: false }} />
       </FilterList>
 
-      <FilterList
-        label="resources.customers.filters.group"
-        icon={<LocalOfferIcon />}
-      >
+      <FilterList label="resources.customers.filters.group" icon={<LocalOfferIcon />}>
         {segments.map((segment) => (
-          <FilterListItem
-            label={segment.name}
-            key={segment.id}
-            value={{ groups: segment.id }}
-          />
+          <FilterListItem label={segment.name} key={segment.id} value={{ groups: segment.id }} />
         ))}
       </FilterList>
     </CardContent>

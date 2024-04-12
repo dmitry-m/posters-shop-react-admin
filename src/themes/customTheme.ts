@@ -1,5 +1,10 @@
-import { alpha, createTheme, PaletteOptions, Theme } from "@mui/material";
-import { ThemeOptions as MuiThemeOptions } from "@mui/material";
+import {
+  alpha,
+  createTheme,
+  PaletteOptions,
+  Theme,
+  ThemeOptions as MuiThemeOptions,
+} from "@mui/material";
 
 export type ComponentsTheme = {
   [key: string]: any;
@@ -92,15 +97,6 @@ const componentsOverrides = (theme: Theme) => {
         size: "small" as const,
       },
     },
-    RaList: {
-      styleOverrides: {
-        root: {
-          "& .RaList-content": {
-            marginRight: 0 + "!important",
-          },
-        },
-      },
-    },
     RaDatagrid: {
       styleOverrides: {
         root: {
@@ -128,10 +124,12 @@ const componentsOverrides = (theme: Theme) => {
             borderRadius: theme.spacing(0.8),
             backgroundColor: theme.palette.background.paper,
             marginRight: theme.spacing(1),
-            marginBottom: theme.spacing(2),
+            marginBottom: theme.spacing(1),
             marginTop: theme.spacing(1),
+            paddingRight: 0,
             [theme.breakpoints.down("sm")]: {
               marginRight: 0,
+              marginBottom: 0,
             },
           },
         },
@@ -141,6 +139,32 @@ const componentsOverrides = (theme: Theme) => {
       styleOverrides: {
         root: {
           height: "100%",
+        },
+      },
+    },
+    RaAppBar: {
+      styleOverrides: {
+        root: {
+          "& .RaAppBar-toolbar": {
+            [theme.breakpoints.up("sm")]: {
+              minHeight: theme.spacing(0.2),
+            },
+            minHeight: theme.spacing(0.2),
+          },
+          "& .RaAppBar-menuButton": {
+            [theme.breakpoints.up("sm")]: {
+              marginLeft: theme.spacing(0.2),
+            },
+          },
+        },
+      },
+    },
+    RaListToolbar: {
+      styleOverrides: {
+        root: {
+          [theme.breakpoints.up("sm")]: {
+            paddingRight: theme.spacing(0.5),
+          },
         },
       },
     },
@@ -162,8 +186,8 @@ const componentsOverrides = (theme: Theme) => {
     RaMenuItemLink: {
       styleOverrides: {
         root: {
-          padding: `${theme.spacing(1)} ${theme.spacing(1.6)} !important`,
-          marginLeft: theme.spacing(1.4),
+          padding: `${theme.spacing(1)} ${theme.spacing(1)} !important`,
+          marginLeft: theme.spacing(1),
           marginTop: theme.spacing(0.6),
           color: theme.palette.text.primary,
           "&.RaMenuItemLink-active": {
@@ -184,6 +208,15 @@ const componentsOverrides = (theme: Theme) => {
         },
       },
     },
+    RaBulkActionsToolbar: {
+      styleOverrides: {
+        root: {
+          "& .RaBulkActionsToolbar-toolbar": {
+            backgroundColor: theme.palette.background.default,
+          },
+        },
+      },
+    },
   };
 };
 
@@ -200,7 +233,7 @@ const darkPalette: PaletteOptions = {
   background: { default: "#030614", paper: "#0a0f23" },
   text: { primary: "#fff" },
   ...alert,
-  mode: "dark" as "dark",
+  mode: "dark" as const,
 };
 
 const lightPalette: PaletteOptions = {
@@ -212,14 +245,14 @@ const lightPalette: PaletteOptions = {
     secondary: "#364152",
   },
   ...alert,
-  mode: "light" as "light",
+  mode: "light" as const,
 };
 
 const createRadiantTheme = (palette: RaThemeOptions["palette"]) => {
   const themeOptions = {
     palette,
     shape: { borderRadius: 6 },
-    sidebar: { width: 244, closedWidth: 82 },
+    sidebar: { width: 244, closedWidth: 64 },
     spacing: 10,
     typography: {
       fontFamily: "Roboto, sans-serif",

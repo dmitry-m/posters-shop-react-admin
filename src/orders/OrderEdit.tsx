@@ -1,3 +1,4 @@
+import { Card, CardContent, Box, Grid, Typography, Link } from "@mui/material";
 import * as React from "react";
 import {
   BooleanInput,
@@ -14,17 +15,11 @@ import {
   useTranslate,
 } from "react-admin";
 import { Link as RouterLink } from "react-router-dom";
-import { Card, CardContent, Box, Grid, Typography, Link } from "@mui/material";
 
-import { Order, Customer } from "../types";
 import Basket from "./Basket";
 import Totals from "./Totals";
 
-const OrderEdit = () => (
-  <Edit title={<OrderTitle />} component="div">
-    <OrderForm />
-  </Edit>
-);
+import { Order, Customer } from "../types";
 
 const OrderTitle = () => {
   const translate = useTranslate();
@@ -81,12 +76,14 @@ const CustomerAddress = () => {
 const Spacer = () => <Box mb={1}>&nbsp;</Box>;
 
 const OrderForm = () => {
+  const record = useRecordContext<Order>();
   const translate = useTranslate();
+
   return (
     <Form>
       <Box maxWidth="50em">
         <PrevNextButtons
-          filterDefaultValues={{ status: "ordered" }}
+          filter={{ status: record.status }}
           sort={{ field: "date", order: "DESC" }}
         />
         <Card>
@@ -114,16 +111,16 @@ const OrderForm = () => {
                       source="status"
                       choices={[
                         {
-                          id: "delivered",
-                          name: "delivered",
+                          id: "DELIVERED",
+                          name: "DELIVERED",
                         },
                         {
-                          id: "ordered",
-                          name: "ordered",
+                          id: "ORDERED",
+                          name: "ORDERED",
                         },
                         {
-                          id: "revoked",
-                          name: "revoked",
+                          id: "REVOKED",
+                          name: "REVOKED",
                         },
                         {
                           id: "unknown",
@@ -135,7 +132,7 @@ const OrderForm = () => {
                   </Grid>
                   <Grid item xs={12} sm={12} md={6}>
                     <Box mt={2}>
-                      <BooleanInput row={true} source="returned" />
+                      <BooleanInput row source="returned" />
                     </Box>
                   </Grid>
                 </Grid>
@@ -144,11 +141,7 @@ const OrderForm = () => {
                 <Typography variant="h6" gutterBottom>
                   {translate("resources.commands.section.customer")}
                 </Typography>
-                <ReferenceField
-                  source="customer_id"
-                  reference="customers"
-                  link={false}
-                >
+                <ReferenceField source="customer_id" reference="customers" link={false}>
                   <CustomerDetails />
                 </ReferenceField>
                 <Spacer />
@@ -156,11 +149,7 @@ const OrderForm = () => {
                 <Typography variant="h6" gutterBottom>
                   {translate("resources.commands.section.shipping_address")}
                 </Typography>
-                <ReferenceField
-                  source="customer_id"
-                  reference="customers"
-                  link={false}
-                >
+                <ReferenceField source="customer_id" reference="customers" link={false}>
                   <CustomerAddress />
                 </ReferenceField>
               </Grid>
@@ -188,5 +177,11 @@ const OrderForm = () => {
     </Form>
   );
 };
+
+const OrderEdit = () => (
+  <Edit title={<OrderTitle />} component="div">
+    <OrderForm />
+  </Edit>
+);
 
 export default OrderEdit;

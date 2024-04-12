@@ -10,12 +10,10 @@ import { User } from "../types";
 interface Props extends FieldProps<User> {
   size?: string;
   sx?: SxProps;
-  label?: string;
-  source?: string;
 }
 
-const FullNameField = (props: Props) => {
-  const { size } = props;
+const FullNameField = (props: Props): JSX.Element => {
+  const { size, sx } = props;
   const record = useRecordContext<User>();
   return record ? (
     <Typography
@@ -24,7 +22,7 @@ const FullNameField = (props: Props) => {
       flexWrap="nowrap"
       alignItems="center"
       component="div"
-      sx={props.sx}
+      sx={sx}
     >
       <AvatarField
         record={record}
@@ -35,16 +33,11 @@ const FullNameField = (props: Props) => {
           mb: -0.5,
         }}
       />
-      {record.fullName}
+      {record.name}
     </Typography>
-  ) : null;
-};
-
-FullNameField.defaultProps = {
-  source: "fullName" as const,
-  label: "resources.users.fields.name",
-  size: "small",
-  sx: {},
+  ) : (
+    <> </>
+  );
 };
 
 export default memo<Props>(FullNameField);

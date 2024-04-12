@@ -1,18 +1,16 @@
+import { Box, Drawer, useMediaQuery, Theme } from "@mui/material";
 import * as React from "react";
 import { useCallback } from "react";
 import { List } from "react-admin";
 import { matchPath, useLocation, useNavigate } from "react-router-dom";
-import { Box, Drawer, useMediaQuery, Theme } from "@mui/material";
 
-import ReviewListMobile from "./ReviewListMobile";
-import ReviewListDesktop from "./ReviewListDesktop";
-import reviewFilters from "./reviewFilters";
 import ReviewEdit from "./ReviewEdit";
+import reviewFilters from "./reviewFilters";
+import ReviewListDesktop from "./ReviewListDesktop";
+import ReviewListMobile from "./ReviewListMobile";
 
 const ReviewList = () => {
-  const isXSmall = useMediaQuery<Theme>((theme) =>
-    theme.breakpoints.down("sm")
-  );
+  const isXSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("sm"));
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -31,7 +29,7 @@ const ReviewList = () => {
             theme.transitions.create(["all"], {
               duration: theme.transitions.duration.enteringScreen,
             }),
-          marginRight: !!match ? "400px" : 0,
+          marginRight: match ? "400px" : 0,
         }}
         filters={reviewFilters}
         perPage={25}
@@ -41,9 +39,7 @@ const ReviewList = () => {
           <ReviewListMobile />
         ) : (
           <ReviewListDesktop
-            selectedRow={
-              !!match ? parseInt((match as any).params.id, 10) : undefined
-            }
+            selectedRow={match ? parseInt((match as any).params.id, 10) : undefined}
           />
         )}
       </List>
@@ -55,9 +51,7 @@ const ReviewList = () => {
         sx={{ zIndex: 100 }}
       >
         {/* To avoid any errors if the route does not match, we don't render at all the component in this case */}
-        {!!match && (
-          <ReviewEdit id={(match as any).params.id} onCancel={handleClose} />
-        )}
+        {!!match && <ReviewEdit id={(match as any).params.id} onCancel={handleClose} />}
       </Drawer>
     </Box>
   );

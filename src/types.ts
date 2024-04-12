@@ -12,10 +12,10 @@ export interface Category extends RaRecord {
 
 export interface User extends RaRecord {
   email: string;
-  fullName: string;
+  name: string;
   avatar: string;
   role: string;
-  isAdmin: boolean;
+  is_admin: boolean;
 }
 
 export interface Product extends RaRecord {
@@ -50,7 +50,7 @@ export interface Customer extends RaRecord {
   email: string;
 }
 
-export type OrderStatus = "ordered" | "delivered" | "revoked";
+export type OrderStatus = "ORDERED" | "DELIVERED" | "REVOKED";
 
 export interface Order extends RaRecord {
   status: OrderStatus;

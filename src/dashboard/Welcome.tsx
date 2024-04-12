@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Box, Card, CardActions, Button, Typography } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import CodeIcon from "@mui/icons-material/Code";
+import HomeIcon from "@mui/icons-material/Home";
+import { Box, Card, CardActions, Button, Typography } from "@mui/material";
+import * as React from "react";
 import { useTranslate } from "react-admin";
 
 import publishArticleImage from "./welcome_illustration.svg";
@@ -42,14 +42,14 @@ const Welcome = () => {
           >
             <Button
               variant="contained"
-              href="https://marmelab.com/react-admin"
-              startIcon={<HomeIcon />}
+              href="https://github.com/dmitry-m/nest-prisma-react-admin-api"
+              startIcon={<CodeIcon />}
             >
               {translate("pos.dashboard.welcome.ra_button")}
             </Button>
             <Button
               variant="contained"
-              href="https://github.com/marmelab/react-admin/tree/master/examples/demo"
+              href="https://github.com/dmitry-m/react-admin-posters-shop"
               startIcon={<CodeIcon />}
             >
               {translate("pos.dashboard.welcome.demo_button")}

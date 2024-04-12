@@ -3,6 +3,13 @@ import { TranslationMessages } from "react-admin";
 
 const customEnglishMessages: TranslationMessages = {
   ...englishMessages,
+  ra: {
+    ...englishMessages.ra,
+    validation: {
+      ...englishMessages.ra.validation,
+      notMatch: "Passwords do not match",
+    },
+  },
   pos: {
     search: "Search",
     configuration: "Configuration",
@@ -31,11 +38,11 @@ const customEnglishMessages: TranslationMessages = {
         items: "by %{customer_name}, one item |||| by %{customer_name}, %{nb_items} items",
       },
       welcome: {
-        title: "Welcome to the react-admin e-commerce demo",
+        title: "Welcome to the GitHub demo of a fictional poster shop using react-admin",
         subtitle:
-          "This is the admin of an imaginary poster shop. Feel free to explore and modify the data - it's local to your computer, and will reset each time you reload.",
-        ra_button: "react-admin site",
-        demo_button: "Source for this demo",
+          "This is the admin panel interface for a fictional poster shop. Feel free to explore and modify data. Enjoy your experience!",
+        ra_button: "API for this interface, built with nest.js",
+        demo_button: "Source code for this demo",
       },
     },
     menu: {
@@ -56,11 +63,17 @@ const customEnglishMessages: TranslationMessages = {
     users: {
       name: "User |||| Users",
       fields: {
-        name: "User",
         email: "Email",
-        fullName: "Full name",
+        name: "Full name",
         avatar: "Avatar",
         role: "Role",
+        is_admin: "Administrator",
+        password: "Password",
+        confirm_password: "Confirm password",
+      },
+      actions: {
+        make_admin: "Make an admin",
+        make_user: "Make a user",
       },
       filters: {
         last_visited: "Last visited",
@@ -82,8 +95,13 @@ const customEnglishMessages: TranslationMessages = {
         password: "Password",
         change_password: "Change Password",
       },
+      roles: {
+        admin: "Administrator",
+        user: "User",
+      },
       page: {
-        delete: "Delete User",
+        delete: "Delete user",
+        create: "Create user",
       },
       errors: {
         password_mismatch: "The password confirmation is not the same as the password.",
@@ -97,6 +115,7 @@ const customEnglishMessages: TranslationMessages = {
         groups: "Segments",
         last_seen: "Last seen",
         last_seen_gte: "Visited Since",
+        last_seen_lte: "Visited Before",
         name: "Name",
         total_spent: "Total spent",
         password: "Password",
@@ -236,6 +255,7 @@ const customEnglishMessages: TranslationMessages = {
       action: {
         accept: "Accept",
         reject: "Reject",
+        pending: "Pending",
       },
       notification: {
         approved_success: "Review approved",
@@ -258,10 +278,6 @@ const customEnglishMessages: TranslationMessages = {
         returns: "Returns",
         reviewer: "Reviewer",
       },
-    },
-    roles: {
-      admin: "Administrator",
-      user: "User",
     },
   },
 };

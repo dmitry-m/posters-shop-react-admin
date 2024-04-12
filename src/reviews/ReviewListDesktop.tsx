@@ -1,3 +1,4 @@
+import PauseCircleOutlineRoundedIcon from "@mui/icons-material/PauseCircleOutlineRounded";
 import * as React from "react";
 import {
   Identifier,
@@ -5,15 +6,16 @@ import {
   DateField,
   TextField,
   BulkDeleteButton,
+  BulkUpdateButton,
 } from "react-admin";
-
-import ProductReferenceField from "../products/ProductReferenceField";
-import CustomerReferenceField from "../visitors/CustomerReferenceField";
-import StarRatingField from "./StarRatingField";
-import rowSx from "./rowSx";
 
 import BulkAcceptButton from "./BulkAcceptButton";
 import BulkRejectButton from "./BulkRejectButton";
+import rowSx from "./rowSx";
+import StarRatingField from "./StarRatingField";
+
+import ProductReferenceField from "../products/ProductReferenceField";
+import CustomerReferenceField from "../visitors/CustomerReferenceField";
 
 export interface ReviewListDesktopProps {
   selectedRow?: Identifier;
@@ -23,6 +25,11 @@ const ReviewsBulkActionButtons = () => (
   <>
     <BulkAcceptButton />
     <BulkRejectButton />
+    <BulkUpdateButton
+      label="resources.reviews.action.pending"
+      data={{ status: "PENDING" }}
+      icon={<PauseCircleOutlineRoundedIcon />}
+    />
     <BulkDeleteButton />
   </>
 );

@@ -33,7 +33,7 @@ const PendingReviews = () => {
   // As ReferenceField aggregates the calls to reference customers,
   // if the first customer is loaded, then all the customers are loaded.
   const isCustomerDataLoaded = useIsDataLoaded(
-    ["customers", "getMany", { ids: [String(reviews?.[0].customer_id)] }],
+    ["customers", "getMany", { ids: [String(reviews?.[0]?.customer_id)] }],
     { enabled: !isLoading && reviews && reviews.length > 0 },
   );
   const display = isLoading || !isCustomerDataLoaded ? "none" : "block";

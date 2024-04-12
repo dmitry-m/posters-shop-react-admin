@@ -1,6 +1,5 @@
-import * as React from "react";
 import ThumbUp from "@mui/icons-material/ThumbUp";
-
+import * as React from "react";
 import {
   Button,
   useUpdateMany,
@@ -19,7 +18,7 @@ const BulkAcceptButton = () => {
 
   const [updateMany, { isLoading }] = useUpdateMany(
     "reviews",
-    { ids: selectedIds, data: { status: "accepted" } },
+    { ids: selectedIds, data: { status: "ACCEPTED" } },
     {
       mutationMode: "undoable",
       onSuccess: () => {
@@ -34,7 +33,7 @@ const BulkAcceptButton = () => {
           type: "error",
         });
       },
-    }
+    },
   );
 
   return (

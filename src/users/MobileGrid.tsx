@@ -1,23 +1,16 @@
 // in src/comments.js
+import { Box, Card, CardHeader } from "@mui/material";
 import * as React from "react";
-import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
-import {
-  DateField,
-  EditButton,
-  useTranslate,
-  NumberField,
-  RecordContextProvider,
-  useListContext,
-} from "react-admin";
+import { EditButton, useTranslate, RecordContextProvider, useListContext } from "react-admin";
 
 import AvatarField from "./AvatarField";
-import ColoredNumberField from "./ColoredNumberField";
 import RoleField from "./RoleField";
-import { Customer } from "../types";
+
+import { User } from "../types";
 
 const MobileGrid = () => {
   const translate = useTranslate();
-  const { data, isLoading } = useListContext<Customer>();
+  const { data, isLoading } = useListContext<User>();
 
   if (isLoading || data.length === 0) {
     return null;
@@ -29,40 +22,17 @@ const MobileGrid = () => {
         <RecordContextProvider key={record.id} value={record}>
           <Card sx={{ margin: "0.5rem 0" }}>
             <CardHeader
-              title={`${record.first_name} ${record.last_name}`}
+              title={`${record.name}`}
               subheader={
                 <>
-                  {translate("resources.customers.fields.fullName")}
+                  {translate("resources.users.fields.role")}
                   &nbsp;
-                  <DateField source="fullName" />
+                  <RoleField source="role" />
                 </>
               }
               avatar={<AvatarField size="45" />}
               action={<EditButton />}
             />
-            <CardContent sx={{ pt: 0 }}>
-              <Typography variant="body2">
-                {translate("resources.commands.name", record.nb_commands || 1)}
-                :&nbsp;
-                <NumberField source="nb_commands" />
-              </Typography>
-              <Typography variant="body2">
-                {translate("resources.customers.fields.total_spent")}
-                :&nbsp;
-                <ColoredNumberField
-                  source="total_spent"
-                  options={{
-                    style: "currency",
-                    currency: "USD",
-                  }}
-                />
-              </Typography>
-            </CardContent>
-            {record.groups && record.groups.length > 0 && (
-              <CardContent sx={{ pt: 0 }}>
-                <RoleField />
-              </CardContent>
-            )}
           </Card>
         </RecordContextProvider>
       ))}

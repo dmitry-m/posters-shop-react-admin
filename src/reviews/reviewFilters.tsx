@@ -6,10 +6,11 @@ import {
   SearchInput,
   SelectInput,
 } from "react-admin";
+
 import { Customer } from "../types";
 
 const reviewFilters = [
-  <SearchInput source="q" alwaysOn />,
+  <SearchInput source="search" alwaysOn />,
   <SelectInput
     source="status"
     choices={[

@@ -3,6 +3,13 @@ import { TranslationMessages } from "react-admin";
 
 const customRussianMessages: TranslationMessages = {
   ...russianMessages,
+  ra: {
+    ...russianMessages.ra,
+    validation: {
+      ...russianMessages.ra.validation,
+      notMatch: "Пароли не совпадают",
+    },
+  },
   pos: {
     search: "Поиск",
     configuration: "Конфигурация",
@@ -31,10 +38,10 @@ const customRussianMessages: TranslationMessages = {
         items: "от %{customer_name}, плакат |||| от %{customer_name}, %{nb_items} плаката",
       },
       welcome: {
-        title: "Добро пожаловать в демонстрацию электронной коммерции react-admin",
+        title: "Добро пожаловать в демонстрацию gitHub проекта на react-admin",
         subtitle:
-          "Это административный интерфейс вымышленного магазина плакатов. Не стесняйтесь исследовать и изменять данные. Демонстрация работает локально в вашем браузере и сбрасывается при каждой перезагрузке страницы.",
-        ra_button: "Веб-сайт react-admin",
+          "Это интерфейс панели администратора вымышленного магазина постеров. Не стесняйтесь исследовать и изменять данные. Приятного пользования!",
+        ra_button: "Api на nest.js для данного интерфейса",
         demo_button: "Исходный код этой демонстрации",
       },
     },
@@ -53,16 +60,21 @@ const customRussianMessages: TranslationMessages = {
       },
     },
   },
-
   resources: {
     users: {
       name: "Пользователь |||| Пользователи",
       fields: {
         name: "Пользователь",
         email: "Почта",
-        fullName: "ФИО",
         avatar: "Аватар",
+        is_admin: "Администратор",
         role: "Роль",
+        password: "Пароль",
+        confirm_password: "Подтвердите пароль",
+      },
+      actions: {
+        make_admin: "Сделать админом",
+        make_user: "Сделать юзером",
       },
       filters: {
         last_visited: "Последнее посещение",
@@ -84,8 +96,13 @@ const customRussianMessages: TranslationMessages = {
         password: "Пароль",
         change_password: "Изменить пароль",
       },
+      roles: {
+        admin: "Администратор",
+        user: "Пользователь",
+      },
       page: {
         delete: "Удалить пользователя",
+        create: "Создать пользователя",
       },
       errors: {
         password_mismatch: "Подтверждение пароля отличается от пароля.",
@@ -107,6 +124,7 @@ const customRussianMessages: TranslationMessages = {
         last_name: "Фамилия",
         last_seen: "Последний просмотр",
         last_seen_gte: "Просмотрено с",
+        last_seen_lte: "Просмотрено до",
         latest_purchase: "Последняя покупка",
         name: "Имя",
         total_spent: "Общие расходы",
@@ -198,7 +216,7 @@ const customRussianMessages: TranslationMessages = {
         height: "Высота",
         image: "Фото",
         price: "Цена",
-        reference: "Ссылка",
+        reference: "Название",
         sales: "Продажи",
         stock_lte: "Малый запас",
         stock: "Запас",
@@ -253,6 +271,7 @@ const customRussianMessages: TranslationMessages = {
       action: {
         accept: "Принять",
         reject: "Отклонить",
+        pending: "Отложить",
       },
       notification: {
         approved_success: "Отзыв одобрен",
@@ -275,10 +294,6 @@ const customRussianMessages: TranslationMessages = {
         returns: "Вернулся",
         reviewer: "Рецензент",
       },
-    },
-    roles: {
-      admin: "Администратор",
-      user: "Пользователь",
     },
   },
 };

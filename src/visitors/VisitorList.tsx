@@ -19,11 +19,12 @@ import SegmentsField from "./SegmentsField";
 import VisitorListAside from "./VisitorListAside";
 
 const visitorFilters = [
-  <SearchInput source="search" alwaysOn />,
-  <DateInput source="last_seen_gte" />,
-  <NullableBooleanInput source="has_ordered" />,
-  <NullableBooleanInput source="has_newsletter" defaultValue />,
-  <SegmentInput source="groups" />,
+  <SearchInput source="search" alwaysOn key="search" />,
+  <DateInput source="last_seen_gte" key="dateGte" />,
+  <DateInput source="last_seen_lte" key="dateLte" />,
+  <NullableBooleanInput source="has_ordered" key="ordered" />,
+  <NullableBooleanInput source="has_newsletter" defaultValue key="news" />,
+  <SegmentInput source="groups" key="segment" />,
 ];
 
 const VisitorList = () => {

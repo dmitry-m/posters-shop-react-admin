@@ -9,9 +9,10 @@ import {
   DateInput,
 } from "react-admin";
 
-import FullNameField from "../visitors/FullNameField";
-import AddressField from "../visitors/AddressField";
 import InvoiceShow from "./InvoiceShow";
+
+import AddressField from "../visitors/AddressField";
+import FullNameField from "../visitors/FullNameField";
 
 const listFilters = [
   <DateInput source="date_gte" alwaysOn />,
@@ -19,11 +20,7 @@ const listFilters = [
 ];
 
 const InvoiceList = () => (
-  <List
-    filters={listFilters}
-    perPage={25}
-    sort={{ field: "date", order: "DESC" }}
-  >
+  <List filters={listFilters} perPage={25} sort={{ field: "date", order: "DESC" }}>
     <Datagrid
       rowClick="expand"
       expand={<InvoiceShow />}

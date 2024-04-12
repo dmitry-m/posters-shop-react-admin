@@ -1,3 +1,4 @@
+import { Grid, Box, Typography } from "@mui/material";
 import * as React from "react";
 import {
   DateInput,
@@ -8,12 +9,13 @@ import {
   SimpleForm,
   useTranslate,
 } from "react-admin";
-import { Grid, Box, Typography } from "@mui/material";
 
 import Aside from "./Aside";
 import FullNameField from "./FullNameField";
 import SegmentsInput from "./SegmentsInput";
 import { validateForm } from "./VisitorCreate";
+
+const VisitorTitle = () => <FullNameField size="32" sx={{ margin: "5px 0" }} />;
 
 const VisitorEdit = () => {
   const translate = useTranslate();
@@ -47,12 +49,7 @@ const VisitorEdit = () => {
               <Typography variant="h6" gutterBottom>
                 {translate("resources.customers.fieldGroups.address")}
               </Typography>
-              <TextInput
-                source="address"
-                multiline
-                fullWidth
-                helperText={false}
-              />
+              <TextInput source="address" multiline fullWidth helperText={false} />
               <Box display={{ xs: "block", sm: "flex" }}>
                 <Box flex={2} mr={{ xs: 0, sm: "0.5em" }}>
                   <TextInput source="city" fullWidth helperText={false} />
@@ -93,7 +90,5 @@ const VisitorEdit = () => {
     </Edit>
   );
 };
-
-const VisitorTitle = () => <FullNameField size="32" sx={{ margin: "5px 0" }} />;
 
 export default VisitorEdit;

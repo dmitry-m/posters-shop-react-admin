@@ -21,7 +21,7 @@ const dateFormatter = (date: number): string => new Date(date).toLocaleDateStrin
 
 const aggregateOrdersByDay = (orders: Order[]): { [key: string]: number } =>
   orders
-    .filter((order: Order) => order.status !== "revoked")
+    .filter((order: Order) => order.status !== "REVOKED")
     .reduce(
       (acc, curr) => {
         const day = format(new Date(curr.date), "yyyy-MM-dd");

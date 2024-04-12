@@ -1,5 +1,5 @@
-import * as React from "react";
 import { Box, Chip, useMediaQuery, Theme } from "@mui/material";
+import * as React from "react";
 import {
   CreateButton,
   ExportButton,
@@ -20,8 +20,8 @@ import {
   useGetResourceLabel,
 } from "react-admin";
 
-import ImageList from "./GridList";
 import Aside from "./Aside";
+import ImageList from "./GridList";
 
 const ProductList = () => {
   const getResourceLabel = useGetResourceLabel();
@@ -65,23 +65,15 @@ const QuickFilter = ({ label }: InputProps) => {
 };
 
 export const productFilters = [
-  <SearchInput source="q" alwaysOn />,
-  <ReferenceInput
-    source="category_id"
-    reference="categories"
-    sort={{ field: "id", order: "ASC" }}
-  >
+  <SearchInput source="search" alwaysOn />,
+  <ReferenceInput source="category_id" reference="categories" sort={{ field: "id", order: "ASC" }}>
     <SelectInput source="name" />
   </ReferenceInput>,
   <NumberInput source="width_gte" />,
   <NumberInput source="width_lte" />,
   <NumberInput source="height_gte" />,
   <NumberInput source="height_lte" />,
-  <QuickFilter
-    label="resources.products.fields.stock_lte"
-    source="stock_lte"
-    defaultValue={10}
-  />,
+  <QuickFilter label="resources.products.fields.stock_lte" source="stock_lte" defaultValue={10} />,
 ];
 
 const ListActions = ({ isSmall }: any) => (

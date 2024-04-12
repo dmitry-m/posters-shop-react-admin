@@ -1,17 +1,18 @@
 import { Box, Typography } from "@mui/material";
 import * as React from "react";
-import {
-  Create,
-  DateInput,
-  SimpleForm,
-  TextInput,
-  useTranslate,
-  PasswordInput,
-  email,
-} from "react-admin";
+import { Create, DateInput, SimpleForm, TextInput, useTranslate, email } from "react-admin";
+
+interface Errors {
+  [key: string]:
+    | string
+    | {
+        message: string;
+        args: any;
+      };
+}
 
 export const validateForm = (values: Record<string, any>): Record<string, any> => {
-  const errors = {} as any;
+  const errors: Errors = {};
   if (!values.first_name) {
     errors.first_name = "ra.validation.required";
   }
@@ -28,6 +29,18 @@ export const validateForm = (values: Record<string, any>): Record<string, any> =
   }
   return errors;
 };
+
+const SectionTitle = ({ label }: { label: string }) => {
+  const translate = useTranslate();
+
+  return (
+    <Typography variant="h6" gutterBottom>
+      {translate(label)}
+    </Typography>
+  );
+};
+
+const Separator = () => <Box pt="1em" />;
 
 const VisitorCreate = () => (
   <Create>
@@ -77,17 +90,5 @@ const VisitorCreate = () => (
     </SimpleForm>
   </Create>
 );
-
-const SectionTitle = ({ label }: { label: string }) => {
-  const translate = useTranslate();
-
-  return (
-    <Typography variant="h6" gutterBottom>
-      {translate(label)}
-    </Typography>
-  );
-};
-
-const Separator = () => <Box pt="1em" />;
 
 export default VisitorCreate;

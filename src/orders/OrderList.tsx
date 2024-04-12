@@ -1,3 +1,4 @@
+import { useMediaQuery, Divider, Tabs, Tab, Theme } from "@mui/material";
 import * as React from "react";
 import { Fragment, useCallback } from "react";
 import {
@@ -21,13 +22,13 @@ import {
   TopToolbar,
   useListContext,
 } from "react-admin";
-import { useMediaQuery, Divider, Tabs, Tab, Theme } from "@mui/material";
 
-import NbItemsField from "./NbItemsField";
-import CustomerReferenceField from "../visitors/CustomerReferenceField";
-import AddressField from "../visitors/AddressField";
 import MobileGrid from "./MobileGrid";
+import NbItemsField from "./NbItemsField";
+
 import { Customer } from "../types";
+import AddressField from "../visitors/AddressField";
+import CustomerReferenceField from "../visitors/CustomerReferenceField";
 
 const ListActions = () => (
   <TopToolbar>
@@ -37,21 +38,9 @@ const ListActions = () => (
   </TopToolbar>
 );
 
-const OrderList = () => (
-  <List
-    filterDefaultValues={{ status: "ordered" }}
-    sort={{ field: "date", order: "DESC" }}
-    perPage={25}
-    filters={orderFilters}
-    actions={<ListActions />}
-  >
-    <TabbedDatagrid />
-  </List>
-);
-
 const orderFilters = [
-  <SearchInput source="q" alwaysOn />,
-  <ReferenceInput source="customer_id" reference="customers">
+  <SearchInput source="search" alwaysOn key="searchFilter" />,
+  <ReferenceInput source="customer_id" reference="customers" key="customerFilter">
     <AutocompleteInput
       optionText={(choice?: Customer) =>
         choice?.id // the empty choice is { id: '' }
@@ -61,39 +50,39 @@ const orderFilters = [
       sx={{ minWidth: 200 }}
     />
   </ReferenceInput>,
-  <DateInput source="date_gte" />,
-  <DateInput source="date_lte" />,
-  <TextInput source="total_gte" />,
-  <NullableBooleanInput source="returned" />,
+  <DateInput source="date_gte" key="dateGteFilter" />,
+  <DateInput source="date_lte" key="dateLteFilter" />,
+  <TextInput source="total_gte" key="totalGteFilter" />,
+  <NullableBooleanInput source="returned" key="returnedFilter" />,
 ];
 
 const tabs = [
-  { id: "ordered", name: "ordered" },
-  { id: "delivered", name: "delivered" },
-  { id: "revoked", name: "revoked" },
+  { id: "ORDERED", name: "ORDERED" },
+  { id: "DELIVERED", name: "DELIVERED" },
+  { id: "REVOKED", name: "REVOKED" },
 ];
 
 const TabbedDatagrid = () => {
   const listContext = useListContext();
   const { filterValues, setFilters, displayedFilters } = listContext;
-  const isXSmall = useMediaQuery<Theme>((theme) =>
-    theme.breakpoints.down("sm")
-  );
+  const isXSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("sm"));
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<{}>, value: any) => {
+    (event: React.ChangeEvent<object>, value: any) => {
+      console.log({ displayedFilters });
+      console.log({ filterValues });
       setFilters &&
         setFilters(
           { ...filterValues, status: value },
           displayedFilters,
-          false // no debounce, we want the filter to fire immediately
+          false, // no debounce, we want the filter to fire immediately
         );
     },
-    [displayedFilters, filterValues, setFilters]
+    [displayedFilters, filterValues, setFilters],
   );
 
   return (
-    <Fragment>
+    <>
       <Tabs
         variant="fullWidth"
         centered
@@ -126,7 +115,7 @@ const TabbedDatagrid = () => {
         <MobileGrid />
       ) : (
         <>
-          {filterValues.status === "ordered" && (
+          {filterValues.status === "ORDERED" && (
             <DatagridConfigurable
               rowClick="edit"
               omit={["total_ex_taxes", "delivery_fees", "taxes"]}
@@ -174,7 +163,7 @@ const TabbedDatagrid = () => {
               />
             </DatagridConfigurable>
           )}
-          {filterValues.status === "delivered" && (
+          {filterValues.status === "DELIVERED" && (
             <DatagridConfigurable
               rowClick="edit"
               omit={["total_ex_taxes", "delivery_fees", "taxes"]}
@@ -223,7 +212,7 @@ const TabbedDatagrid = () => {
               <BooleanField source="returned" sx={{ mt: -0.5, mb: -0.5 }} />
             </DatagridConfigurable>
           )}
-          {filterValues.status === "revoked" && (
+          {filterValues.status === "REVOKED" && (
             <DatagridConfigurable
               rowClick="edit"
               omit={["total_ex_taxes", "delivery_fees", "taxes"]}
@@ -269,12 +258,25 @@ const TabbedDatagrid = () => {
                 }}
                 sx={{ fontWeight: "bold" }}
               />
+              <BooleanField source="returned" sx={{ mt: -0.5, mb: -0.5 }} />
             </DatagridConfigurable>
           )}
         </>
       )}
-    </Fragment>
+    </>
   );
 };
+
+const OrderList = () => (
+  <List
+    filterDefaultValues={{ status: "ORDERED" }}
+    sort={{ field: "date", order: "DESC" }}
+    perPage={25}
+    filters={orderFilters}
+    actions={<ListActions />}
+  >
+    <TabbedDatagrid />
+  </List>
+);
 
 export default OrderList;

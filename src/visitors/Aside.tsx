@@ -1,3 +1,15 @@
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import {
+  Typography,
+  Card,
+  CardContent,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Grid,
+} from "@mui/material";
 import * as React from "react";
 import {
   NumberField,
@@ -11,27 +23,11 @@ import {
   Link,
   useReference,
 } from "react-admin";
-import {
-  Typography,
-  Card,
-  CardContent,
-  Box,
-  Stepper,
-  Step,
-  StepLabel,
-  StepContent,
-  Grid,
-} from "@mui/material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import order from "../orders";
 import review from "../reviews";
 import StarRatingField from "../reviews/StarRatingField";
-import {
-  Order as OrderRecord,
-  Review as ReviewRecord,
-  Customer,
-} from "../types";
+import { Order as OrderRecord, Review as ReviewRecord, Customer } from "../types";
 
 const Aside = () => {
   const record = useRecordContext<Customer>();
@@ -46,22 +42,16 @@ const EventList = () => {
   const record = useRecordContext<Customer>();
   const translate = useTranslate();
 
-  const { data: orders, total: totalOrders } = useGetList<OrderRecord>(
-    "commands",
-    {
-      pagination: { page: 1, perPage: 100 },
-      sort: { field: "date", order: "DESC" },
-      filter: { customer_id: record.id },
-    }
-  );
-  const { data: reviews, total: totalReviews } = useGetList<ReviewRecord>(
-    "reviews",
-    {
-      pagination: { page: 1, perPage: 100 },
-      sort: { field: "date", order: "DESC" },
-      filter: { customer_id: record.id },
-    }
-  );
+  const { data: orders, total: totalOrders } = useGetList<OrderRecord>("commands", {
+    pagination: { page: 1, perPage: 100 },
+    sort: { field: "date", order: "DESC" },
+    filter: { customer_id: record.id },
+  });
+  const { data: reviews, total: totalReviews } = useGetList<ReviewRecord>("reviews", {
+    pagination: { page: 1, perPage: 100 },
+    sort: { field: "date", order: "DESC" },
+    filter: { customer_id: record.id },
+  });
   const events = mixOrdersAndReviews(orders, reviews);
   console.log({ totalOrders });
   return (
@@ -94,7 +84,7 @@ const EventList = () => {
                         customer_id: true,
                       })}&filter=${JSON.stringify({
                         customer_id: record.id,
-                        status: "delivered",
+                        status: "DELIVERED",
                       })}`,
                     }}
                   >
@@ -152,10 +142,7 @@ interface AsideEvent {
   data: OrderRecord | ReviewRecord;
 }
 
-const mixOrdersAndReviews = (
-  orders?: OrderRecord[],
-  reviews?: ReviewRecord[]
-): AsideEvent[] => {
+const mixOrdersAndReviews = (orders?: OrderRecord[], reviews?: ReviewRecord[]): AsideEvent[] => {
   const eventsFromOrders = orders
     ? orders.map<AsideEvent>((order) => ({
         type: "order",
@@ -171,9 +158,7 @@ const mixOrdersAndReviews = (
       }))
     : [];
   const events = eventsFromOrders.concat(eventsFromReviews);
-  events.sort(
-    (e1, e2) => new Date(e2.date).getTime() - new Date(e1.date).getTime()
-  );
+  events.sort((e1, e2) => new Date(e2.date).getTime() - new Date(e1.date).getTime());
   return events;
 };
 
@@ -181,11 +166,7 @@ const Timeline = ({ events }: { events: AsideEvent[] }) => (
   <Stepper orientation="vertical" sx={{ my: 1, ml: 1.5 }}>
     {events.map((event) => (
       <Step key={`${event.type}-${event.data.id}`} expanded active completed>
-        <Link
-          to={`/${event.type === "order" ? "commands" : "reviews"}/${
-            event.data.id
-          }`}
-        >
+        <Link to={`/${event.type === "order" ? "commands" : "reviews"}/${event.data.id}`}>
           <RecordContextProvider value={event.data}>
             <StepLabel
               icon={
@@ -198,9 +179,7 @@ const Timeline = ({ events }: { events: AsideEvent[] }) => (
             >
               {event.type === "order" ? <OrderTitle /> : <ReviewTitle />}
             </StepLabel>
-            <StepContent>
-              {event.type === "order" ? <Order /> : <Review />}
-            </StepContent>
+            <StepContent>{event.type === "order" ? <Order /> : <Review />}</StepContent>
           </RecordContextProvider>
         </Link>
       </Step>
@@ -241,10 +220,7 @@ const Order = () => {
         <TextField source="status" />
       </Typography>
       <Typography variant="body2" color="textSecondary">
-        <NumberField
-          source="total"
-          options={{ style: "currency", currency: "USD" }}
-        />
+        <NumberField source="total" options={{ style: "currency", currency: "USD" }} />
       </Typography>
     </>
   );

@@ -1,8 +1,8 @@
 import VisitorIcon from "@mui/icons-material/People";
 
-import UserList from "./UserList";
 import UserCreate from "./UserCreate";
 import UserEdit from "./UserEdit";
+import UserList from "./UserList";
 
 const resource = {
   list: UserList,

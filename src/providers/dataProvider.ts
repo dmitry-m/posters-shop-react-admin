@@ -1,21 +1,34 @@
-import { fetchUtils, Options } from "react-admin";
 import simpleRestProvider from "ra-data-simple-rest";
+import { fetchUtils, Options, UpdateParams } from "react-admin";
 
+import { API_URL } from "./apiConstants";
 import { inMemoryJWT } from "./authProvider";
-import { API_PREFIX as API_URL } from "./apiConstants";
 
 const httpClient = async (url: string, options: Options | undefined) => {
   const token = await inMemoryJWT.getFreshToken();
 
-  if (!options) options = {};
-  options.user = {
+  const authOptions = { ...options };
+  authOptions.user = {
     authenticated: true,
-    token: `Bearer ${token}`,
+    token: typeof token === "string" ? `Bearer ${token}` : "",
+    ...options?.user,
   };
 
-  return fetchUtils.fetchJson(url, options);
+  return fetchUtils.fetchJson(url, authOptions);
 };
 
-export const dataProvider = simpleRestProvider(API_URL, httpClient);
+export const restProvider = simpleRestProvider(API_URL, httpClient);
+
+export const dataProvider = {
+  ...restProvider,
+  update: (resource: string, params: UpdateParams & { data: { id?: string } }): Promise<any> => {
+    const {
+      data: { id, ...restData },
+    } = params;
+    const updatedParams = { ...params, data: { ...restData } };
+
+    return restProvider.update(resource, updatedParams);
+  },
+};
 
 export default dataProvider;

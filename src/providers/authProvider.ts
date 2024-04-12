@@ -1,24 +1,45 @@
+/* eslint-disable prefer-promise-reject-errors */
 import { AuthProvider, fetchUtils } from "react-admin";
-import TokenManager from "./JWTManager";
-import { User } from "../types";
+
 import { LOGIN_URL, SIGNUP_URL, LOGOUT_URL, TOKEN_URL } from "./apiConstants";
+import TokenManager from "./JWTManager";
+
+import { AuthInterface } from "../types";
+
+type FormValues = {
+  username: string;
+  password: string;
+};
+
+interface ResponseError extends Error {
+  status?: number;
+}
 
 export type MyAuthProvider = AuthProvider & {
-  setAuth: (data: User) => Promise<{ redirectTo?: string | boolean } | void>;
+  setAuth: (data: AuthInterface) => Promise<{ redirectTo?: string | boolean } | void>;
   signUp: (params: any) => Promise<{ redirectTo?: string | boolean } | void>;
 };
 
 export const inMemoryJWT = new TokenManager(TOKEN_URL);
 
 export const authProvider: MyAuthProvider = {
-  login: function ({ username, password }) {
+  setAuth: (data) => {
+    console.log("authProvider setAuth");
+    const { accessToken, ...user } = data;
+    localStorage.setItem("user", JSON.stringify(user));
+    inMemoryJWT.setToken(accessToken);
+
+    return Promise.resolve({ redirectTo: "/" });
+  },
+
+  login({ username, password }: FormValues) {
     return fetchUtils
       .fetchJson(LOGIN_URL, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         credentials: "include",
       })
-      .then(({ json }) => {
+      .then(({ json }: { json: AuthInterface }) => {
         return this.setAuth(json);
       })
       .catch((error) => {
@@ -26,74 +47,42 @@ export const authProvider: MyAuthProvider = {
       });
   },
 
-  setAuth: (data: User) => {
-    console.log("authProvider setAuth");
-    const { accessToken, ...user } = data;
-    localStorage.setItem("user", JSON.stringify(user));
-    inMemoryJWT.setToken(accessToken);
-
-    if (user.role !== "admin") {
-      console.log({ redirectTo: "/segments" });
-      return Promise.resolve({ redirectTo: "/segments" });
-    }
-    console.log({ redirectTo: "/" });
-    return Promise.resolve({ redirectTo: "/" });
-  },
-
-  signUp: function ({ username, password, refetch }) {
+  signUp({ username, password }: FormValues) {
     return fetchUtils
       .fetchJson(SIGNUP_URL, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         credentials: "include",
       })
-      .then(({ json }) => {
+      .then(({ json }: { json: AuthInterface }) => {
         return this.setAuth(json);
       })
-      .catch((error) => {
+      .catch((error: ResponseError) => {
         console.log("auth provider error");
         console.log({ error });
         return Promise.reject(error);
-        // return Promise.resolve(null);
       });
   },
 
   logout: () => {
-    inMemoryJWT.eraseTokens();
+    inMemoryJWT.eraseToken();
     localStorage.removeItem("user");
-    fetchUtils.fetchJson(LOGOUT_URL);
+    console.log("logout");
+    void fetchUtils.fetchJson(LOGOUT_URL);
 
+    return Promise.resolve("/login");
+  },
+
+  checkError(error: ResponseError) {
+    const { status } = error;
+    console.log("checkError");
+    if (status !== 404) {
+      localStorage.removeItem("user");
+    }
     return Promise.resolve();
   },
 
-  checkError: function (error) {
-    const status = error.status;
-    const user = localStorage.getItem("user");
-    console.log("checkError");
-    if (status === 403 && user) {
-      return Promise.resolve();
-    }
-
-    return fetchUtils
-      .fetchJson(TOKEN_URL, {
-        method: "GET",
-        credentials: "include",
-      })
-      .then(({ json }) => {
-        this.setAuth(json);
-
-        return Promise.resolve();
-      })
-      .catch(() => {
-        console.log({ eraseTokens: "checkError" });
-        localStorage.removeItem("user");
-        inMemoryJWT.eraseTokens();
-        console.log("auth error");
-        return Promise.reject("ra.auth.auth_check_error");
-      });
-  },
-
-  checkAuth: function () {
+  checkAuth() {
     console.log("checkAuth");
     const user = localStorage.getItem("user");
     if (user) return Promise.resolve();
@@ -103,54 +92,35 @@ export const authProvider: MyAuthProvider = {
         method: "GET",
         credentials: "include",
       })
-      .then(({ json }) => {
-        this.setAuth(json);
-
+      .then(async ({ json }: { json: AuthInterface }) => {
+        await this.setAuth(json);
         return Promise.resolve();
       })
       .catch(() => {
         console.log({ eraseTokens: "checkAuth" });
         localStorage.removeItem("user");
-        inMemoryJWT.eraseTokens();
+        inMemoryJWT.eraseToken();
         console.log("auth error");
-        return Promise.reject("ra.auth.auth_check_error");
+        return Promise.reject({ message: "ra.auth.auth_check_error" });
       });
   },
 
-  getPermissions: function () {
+  getPermissions() {
     console.log("checkPermissions");
     const user = localStorage.getItem("user");
     if (user) {
-      const role = JSON.parse(user).role;
+      const { role } = JSON.parse(user) as AuthInterface;
       console.log({ role });
       return Promise.resolve(role);
     }
     return Promise.resolve(null);
-    // return fetchUtils
-    //   .fetchJson(TOKEN_URL, {
-    //     method: "GET",
-    //     credentials: "include",
-    //   })
-    //   .then(({ json }) => {
-    //     this.setAuth(json);
-    //     const { role } = json;
-    //     console.log({ role });
-
-    //     return Promise.resolve(role);
-    //   })
-    //   .catch(() => {
-    //     console.log({ eraseTokens: "getPermissions" });
-    //     inMemoryJWT.eraseTokens();
-
-    //     return Promise.resolve(null);
-    //   });
   },
 
   getIdentity: () => {
     console.log("checkIdentity");
     const user = localStorage.getItem("user");
     console.log({ user });
-    return user ? Promise.resolve(JSON.parse(user)) : Promise.reject();
+    return user ? Promise.resolve(JSON.parse(user)) : Promise.reject({ redirectTo: "/" });
   },
 };
 
