@@ -1,4 +1,4 @@
-import { Box, Drawer, useMediaQuery, Theme } from "@mui/material";
+import { Box, Drawer, useMediaQuery, Theme, SxProps } from "@mui/material";
 import * as React from "react";
 import { useCallback } from "react";
 import { List } from "react-admin";
@@ -23,14 +23,16 @@ const ReviewList = () => {
   return (
     <Box display="flex">
       <List
-        sx={{
-          flexGrow: 1,
-          transition: (theme: any) =>
-            theme.transitions.create(["all"], {
-              duration: theme.transitions.duration.enteringScreen,
-            }),
-          marginRight: match ? "400px" : 0,
-        }}
+        sx={
+          {
+            flexGrow: 1,
+            transition: (theme: Theme) =>
+              theme.transitions.create(["all"], {
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+            marginRight: match ? "400px" : 0,
+          } as SxProps
+        }
         filters={reviewFilters}
         perPage={25}
         sort={{ field: "date", order: "DESC" }}
@@ -39,7 +41,7 @@ const ReviewList = () => {
           <ReviewListMobile />
         ) : (
           <ReviewListDesktop
-            selectedRow={match ? parseInt((match as any).params.id, 10) : undefined}
+            selectedRow={match ? parseInt(match?.params?.id || "", 10) : undefined}
           />
         )}
       </List>
@@ -50,8 +52,7 @@ const ReviewList = () => {
         onClose={handleClose}
         sx={{ zIndex: 100 }}
       >
-        {/* To avoid any errors if the route does not match, we don't render at all the component in this case */}
-        {!!match && <ReviewEdit id={(match as any).params.id} onCancel={handleClose} />}
+        {!!match && <ReviewEdit id={match.params.id} onCancel={handleClose} />}
       </Drawer>
     </Box>
   );

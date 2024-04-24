@@ -15,8 +15,8 @@ import AddressField from "../visitors/AddressField";
 import FullNameField from "../visitors/FullNameField";
 
 const listFilters = [
-  <DateInput source="date_gte" alwaysOn />,
-  <DateInput source="date_lte" alwaysOn />,
+  <DateInput source="date_gte" alwaysOn key="dateGGE" />,
+  <DateInput source="date_lte" alwaysOn key="dateLTE" />,
 ];
 
 const InvoiceList = () => (

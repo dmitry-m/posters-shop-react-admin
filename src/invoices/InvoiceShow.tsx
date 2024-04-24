@@ -1,9 +1,22 @@
-import * as React from "react";
 import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import * as React from "react";
 import { ReferenceField, TextField, useRecordContext } from "react-admin";
 
 import Basket from "../orders/Basket";
 import { Customer, Invoice } from "../types";
+
+const CustomerField = () => {
+  const record = useRecordContext<Customer>();
+  return record ? (
+    <Typography>
+      {record.first_name} {record.last_name}
+      <br />
+      {record.address}
+      <br />
+      {record.city}, {record.zipcode}
+    </Typography>
+  ) : null;
+};
 
 const InvoiceShow = () => {
   const record = useRecordContext<Invoice>();
@@ -25,11 +38,7 @@ const InvoiceShow = () => {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} container alignContent="flex-end">
-            <ReferenceField
-              reference="customers"
-              source="customer_id"
-              link={false}
-            >
+            <ReferenceField reference="customers" source="customer_id" link={false}>
               <CustomerField />
             </ReferenceField>
           </Grid>
@@ -49,17 +58,8 @@ const InvoiceShow = () => {
             <Typography variant="h6" gutterBottom align="center">
               Order
             </Typography>
-            <ReferenceField
-              reference="commands"
-              source="command_id"
-              link={false}
-            >
-              <TextField
-                source="reference"
-                align="center"
-                component="p"
-                gutterBottom
-              />
+            <ReferenceField reference="commands" source="command_id" link={false}>
+              <TextField source="reference" align="center" component="p" gutterBottom />
             </ReferenceField>
           </Grid>
         </Grid>
@@ -71,19 +71,6 @@ const InvoiceShow = () => {
       </CardContent>
     </Card>
   );
-};
-
-const CustomerField = () => {
-  const record = useRecordContext<Customer>();
-  return record ? (
-    <Typography>
-      {record.first_name} {record.last_name}
-      <br />
-      {record.address}
-      <br />
-      {record.city}, {record.zipcode}
-    </Typography>
-  ) : null;
 };
 
 export default InvoiceShow;

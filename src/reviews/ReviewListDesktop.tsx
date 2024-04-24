@@ -41,11 +41,6 @@ const ReviewListDesktop = ({ selectedRow }: ReviewListDesktopProps) => (
     optimized
     bulkActionButtons={<ReviewsBulkActionButtons />}
     sx={{
-      "& .RaDatagrid-thead": {
-        borderLeftColor: "transparent",
-        borderLeftWidth: 5,
-        borderLeftStyle: "solid",
-      },
       "& .column-comment": {
         maxWidth: "18em",
         overflow: "hidden",

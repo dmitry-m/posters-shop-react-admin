@@ -64,8 +64,8 @@ const componentsOverrides = (theme: Theme) => {
           backgroundClip: "padding-box",
           "&.MuiCard-root": {
             backgroundColor: theme.palette.background.default,
-            marginTop: theme.spacing(1),
-            marginRight: theme.spacing(1),
+            // marginTop: theme.spacing(1),
+            // marginRight: theme.spacing(1),
           },
         },
       },
@@ -126,7 +126,7 @@ const componentsOverrides = (theme: Theme) => {
             marginRight: theme.spacing(1),
             marginBottom: theme.spacing(1),
             marginTop: theme.spacing(1),
-            paddingRight: 0,
+            paddingRight: theme.spacing(1),
             [theme.breakpoints.down("sm")]: {
               marginRight: 0,
               marginBottom: 0,
