@@ -1,5 +1,5 @@
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-restricted-syntax */
 import { Typography } from "@mui/material";
 import * as React from "react";
 import { Create, SimpleForm, useTranslate, email } from "react-admin";

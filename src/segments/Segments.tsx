@@ -1,16 +1,9 @@
+import { Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import * as React from "react";
-import {
-  Card,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import { useTranslate, Title } from "react-admin";
 
-import LinkToRelatedCustomers from "./LinkToRelatedCustomers";
 import segments from "./data";
+import LinkToRelatedCustomers from "./LinkToRelatedCustomers";
 
 const Segments = () => {
   const translate = useTranslate();

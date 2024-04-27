@@ -2,13 +2,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import queryString from "query-string";
 import * as React from "react";
-import {
-  ReferenceField,
-  FunctionField,
-  useGetList,
-  useTranslate,
-  useIsDataLoaded,
-} from "react-admin";
+import { ReferenceField, FunctionField, useGetList, useTranslate } from "react-admin";
 import { Link } from "react-router-dom";
 
 import CardWithIcon from "./CardWithIcon";
@@ -18,25 +12,11 @@ import { Customer, Review } from "../types";
 
 const PendingReviews = () => {
   const translate = useTranslate();
-  const {
-    data: reviews,
-    total,
-    isLoading,
-  } = useGetList<Review>("reviews", {
+  const { data: reviews, total } = useGetList<Review>("reviews", {
     filter: { status: "pending" },
     sort: { field: "date", order: "DESC" },
     pagination: { page: 1, perPage: 100 },
   });
-
-  // Poor man's Suspense: hide the content until all the data is loaded,
-  // including the reference customers.
-  // As ReferenceField aggregates the calls to reference customers,
-  // if the first customer is loaded, then all the customers are loaded.
-  const isCustomerDataLoaded = useIsDataLoaded(
-    ["customers", "getMany", { ids: [String(reviews?.[0]?.customer_id)] }],
-    { enabled: !isLoading && reviews && reviews.length > 0 },
-  );
-  const display = isLoading || !isCustomerDataLoaded ? "none" : "block";
 
   return (
     <CardWithIcon
@@ -50,7 +30,7 @@ const PendingReviews = () => {
       title={translate("pos.dashboard.pending_reviews")}
       subtitle={total}
     >
-      <List sx={{ display }}>
+      <List>
         {reviews?.map((record: Review) => (
           <ListItem
             key={record.id}

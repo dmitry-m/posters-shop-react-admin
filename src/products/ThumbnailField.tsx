@@ -1,6 +1,7 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
+import * as React from "react";
 import { useRecordContext } from "react-admin";
+
 import { Product } from "../types";
 
 const Img = styled("img")({

@@ -1,5 +1,4 @@
 import CodeIcon from "@mui/icons-material/Code";
-import HomeIcon from "@mui/icons-material/Home";
 import { Box, Card, CardActions, Button, Typography } from "@mui/material";
 import * as React from "react";
 import { useTranslate } from "react-admin";

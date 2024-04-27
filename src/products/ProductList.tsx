@@ -23,6 +23,42 @@ import {
 import Aside from "./Aside";
 import ImageList from "./GridList";
 
+const QuickFilter = ({ label }: InputProps) => {
+  const translate = useTranslate();
+  return <Chip sx={{ mb: 1 }} label={translate(label as string)} />;
+};
+
+export const productFilters = [
+  <SearchInput source="search" alwaysOn key="search" />,
+  <ReferenceInput
+    source="category_id"
+    reference="categories"
+    sort={{ field: "id", order: "ASC" }}
+    key="id"
+  >
+    <SelectInput source="name" />
+  </ReferenceInput>,
+  <NumberInput source="width_gte" key="wGte" />,
+  <NumberInput source="width_lte" key="wLte" />,
+  <NumberInput source="height_gte" key="hGte" />,
+  <NumberInput source="height_lte" key="hLte" />,
+  <QuickFilter
+    label="resources.products.fields.stock_lte"
+    source="stock_lte"
+    defaultValue={10}
+    key="sLte"
+  />,
+];
+
+const ListActions = ({ isSmall }: any) => (
+  <TopToolbar>
+    {isSmall && <FilterButton />}
+    <SortButton fields={["reference", "sales", "stock"]} />
+    <CreateButton />
+    <ExportButton />
+  </TopToolbar>
+);
+
 const ProductList = () => {
   const getResourceLabel = useGetResourceLabel();
   const isSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("md"));
@@ -58,31 +94,5 @@ const ProductList = () => {
     </ListBase>
   );
 };
-
-const QuickFilter = ({ label }: InputProps) => {
-  const translate = useTranslate();
-  return <Chip sx={{ mb: 1 }} label={translate(label as string)} />;
-};
-
-export const productFilters = [
-  <SearchInput source="search" alwaysOn />,
-  <ReferenceInput source="category_id" reference="categories" sort={{ field: "id", order: "ASC" }}>
-    <SelectInput source="name" />
-  </ReferenceInput>,
-  <NumberInput source="width_gte" />,
-  <NumberInput source="width_lte" />,
-  <NumberInput source="height_gte" />,
-  <NumberInput source="height_lte" />,
-  <QuickFilter label="resources.products.fields.stock_lte" source="stock_lte" defaultValue={10} />,
-];
-
-const ListActions = ({ isSmall }: any) => (
-  <TopToolbar>
-    {isSmall && <FilterButton />}
-    <SortButton fields={["reference", "sales", "stock"]} />
-    <CreateButton />
-    <ExportButton />
-  </TopToolbar>
-);
 
 export default ProductList;

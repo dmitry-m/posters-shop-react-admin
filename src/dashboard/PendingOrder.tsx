@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   ListItem,
   ListItemSecondaryAction,
@@ -7,8 +6,9 @@ import {
   Avatar,
   Box,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import * as React from "react";
 import { useTranslate, useReference } from "react-admin";
+import { Link } from "react-router-dom";
 
 import { Customer, Order } from "../types";
 
@@ -31,9 +31,9 @@ export const PendingOrder = (props: Props) => {
           <Avatar />
         ) : (
           <Avatar
-            src={`${customer?.avatar}?size=32x32`}
+            src={`${customer?.avatar || ""}?size=32x32`}
             sx={{ bgcolor: "background.paper" }}
-            alt={`${customer?.first_name} ${customer?.last_name}`}
+            alt={`${customer?.first_name || ""} ${customer?.last_name || ""}`}
           />
         )}
       </ListItemAvatar>
@@ -42,9 +42,7 @@ export const PendingOrder = (props: Props) => {
         secondary={translate("pos.dashboard.order.items", {
           smart_count: order.basket.length,
           nb_items: order.basket.length,
-          customer_name: customer
-            ? `${customer.first_name} ${customer.last_name}`
-            : "",
+          customer_name: customer ? `${customer.first_name} ${customer.last_name}` : "",
         })}
       />
       <ListItemSecondaryAction>
@@ -61,3 +59,5 @@ export const PendingOrder = (props: Props) => {
     </ListItem>
   );
 };
+
+export default PendingOrder;

@@ -7,7 +7,7 @@ interface Props {
   to: To;
   title: string;
   subtitle: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const CardWithIcon = ({ icon, title, subtitle, to, children }: Props) => (

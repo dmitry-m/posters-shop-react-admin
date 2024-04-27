@@ -1,6 +1,6 @@
 import { useMediaQuery, Divider, Tabs, Tab, Theme } from "@mui/material";
 import * as React from "react";
-import { Fragment, useCallback } from "react";
+import { useCallback } from "react";
 import {
   AutocompleteInput,
   BooleanField,
@@ -11,6 +11,7 @@ import {
   ExportButton,
   FilterButton,
   List,
+  ListControllerResult,
   NullableBooleanInput,
   NumberField,
   ReferenceField,
@@ -26,7 +27,7 @@ import {
 import MobileGrid from "./MobileGrid";
 import NbItemsField from "./NbItemsField";
 
-import { Customer } from "../types";
+import { Customer, Order } from "../types";
 import AddressField from "../visitors/AddressField";
 import CustomerReferenceField from "../visitors/CustomerReferenceField";
 
@@ -43,9 +44,7 @@ const orderFilters = [
   <ReferenceInput source="customer_id" reference="customers" key="customerFilter">
     <AutocompleteInput
       optionText={(choice?: Customer) =>
-        choice?.id // the empty choice is { id: '' }
-          ? `${choice.first_name} ${choice.last_name}`
-          : ""
+        choice?.id ? `${choice.first_name} ${choice.last_name}` : ""
       }
       sx={{ minWidth: 200 }}
     />
@@ -62,21 +61,21 @@ const tabs = [
   { id: "REVOKED", name: "REVOKED" },
 ];
 
+interface MyOrderListController extends ListControllerResult {
+  filterValues: Order;
+  displayedFilters: { [key: keyof Order]: boolean };
+}
+
 const TabbedDatagrid = () => {
-  const listContext = useListContext();
-  const { filterValues, setFilters, displayedFilters } = listContext;
+  const listContext = useListContext<Order>();
+  const { filterValues, setFilters, displayedFilters } = listContext as MyOrderListController;
   const isXSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("sm"));
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<object>, value: any) => {
-      console.log({ displayedFilters });
-      console.log({ filterValues });
-      setFilters &&
-        setFilters(
-          { ...filterValues, status: value },
-          displayedFilters,
-          false, // no debounce, we want the filter to fire immediately
-        );
+    (event: React.ChangeEvent<object>, value: string) => {
+      if (setFilters) {
+        setFilters({ ...filterValues, status: value }, displayedFilters, false);
+      }
     },
     [displayedFilters, filterValues, setFilters],
   );

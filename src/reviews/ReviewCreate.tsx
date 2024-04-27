@@ -15,13 +15,15 @@ import { useLocation } from "react-router";
 
 import StarRatingInput from "./StarRatingInput";
 
+import { Product } from "../types";
+
 const ReviewCreate = () => {
   const notify = useNotify();
   const redirect = useRedirect();
   const location = useLocation();
 
   const onSuccess = (_: any) => {
-    const record = getRecordFromLocation(location);
+    const record = getRecordFromLocation(location) as Product & { product_id: string };
     notify("ra.notification.created");
     if (record && record.product_id) {
       redirect(`/products/${record.product_id}/reviews`);
@@ -39,19 +41,9 @@ const ReviewCreate = () => {
         <ReferenceInput source="product_id" reference="products">
           <AutocompleteInput optionText="reference" validate={required()} />
         </ReferenceInput>
-        <DateInput
-          source="date"
-          defaultValue={new Date()}
-          validate={required()}
-        />
+        <DateInput source="date" defaultValue={new Date()} validate={required()} />
         <StarRatingInput source="rating" defaultValue={2} />
-        <TextInput
-          source="comment"
-          multiline
-          fullWidth
-          resettable
-          validate={required()}
-        />
+        <TextInput source="comment" multiline fullWidth resettable validate={required()} />
       </SimpleForm>
     </Create>
   );

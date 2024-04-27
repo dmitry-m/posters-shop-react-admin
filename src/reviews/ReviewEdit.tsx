@@ -1,3 +1,5 @@
+import CloseIcon from "@mui/icons-material/Close";
+import { Box, Grid, Stack, IconButton, Typography } from "@mui/material";
 import * as React from "react";
 import {
   EditBase,
@@ -8,14 +10,13 @@ import {
   EditProps,
   Labeled,
 } from "react-admin";
-import { Box, Grid, Stack, IconButton, Typography } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+
+import ReviewEditToolbar from "./ReviewEditToolbar";
+import StarRatingField from "./StarRatingField";
 
 import ProductReferenceField from "../products/ProductReferenceField";
-import CustomerReferenceField from "../visitors/CustomerReferenceField";
-import StarRatingField from "./StarRatingField";
-import ReviewEditToolbar from "./ReviewEditToolbar";
 import { Review } from "../types";
+import CustomerReferenceField from "../visitors/CustomerReferenceField";
 
 interface Props extends EditProps<Review> {
   onCancel: () => void;

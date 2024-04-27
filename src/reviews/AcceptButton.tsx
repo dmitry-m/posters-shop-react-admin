@@ -1,19 +1,10 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
 import ThumbUp from "@mui/icons-material/ThumbUp";
-import {
-  useTranslate,
-  useUpdate,
-  useNotify,
-  useRedirect,
-  useRecordContext,
-} from "react-admin";
-import { Review } from "./../types";
+import Button from "@mui/material/Button";
+import * as React from "react";
+import { useTranslate, useUpdate, useNotify, useRedirect, useRecordContext } from "react-admin";
 
-/**
- * This custom button demonstrate using useUpdate to update data
- */
+import { Review } from "../types";
+
 const AcceptButton = () => {
   const translate = useTranslate();
   const notify = useNotify();
@@ -37,7 +28,7 @@ const AcceptButton = () => {
           type: "error",
         });
       },
-    }
+    },
   );
   return record && record.status === "pending" ? (
     <Button
@@ -46,9 +37,7 @@ const AcceptButton = () => {
       size="small"
       onClick={() => approve()}
       sx={{ borderColor: (theme) => theme.palette.success.main }}
-      startIcon={
-        <ThumbUp sx={{ color: (theme) => theme.palette.success.main }} />
-      }
+      startIcon={<ThumbUp sx={{ color: (theme) => theme.palette.success.main }} />}
       disabled={isLoading}
     >
       {translate("resources.reviews.action.accept")}
@@ -56,10 +45,6 @@ const AcceptButton = () => {
   ) : (
     <span />
   );
-};
-
-AcceptButton.propTypes = {
-  record: PropTypes.any,
 };
 
 export default AcceptButton;

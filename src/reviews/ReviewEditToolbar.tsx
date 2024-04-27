@@ -1,7 +1,5 @@
-import * as React from "react";
-import { Fragment } from "react";
 import Toolbar from "@mui/material/Toolbar";
-
+import * as React from "react";
 import {
   SaveButton,
   DeleteButton,
@@ -10,8 +8,10 @@ import {
   useNotify,
   useRedirect,
 } from "react-admin";
+
 import AcceptButton from "./AcceptButton";
 import RejectButton from "./RejectButton";
+
 import { Review } from "../types";
 
 const ReviewEditToolbar = (props: ToolbarProps) => {
@@ -31,12 +31,12 @@ const ReviewEditToolbar = (props: ToolbarProps) => {
       }}
     >
       {record.status === "pending" ? (
-        <Fragment>
+        <>
           <AcceptButton />
           <RejectButton />
-        </Fragment>
+        </>
       ) : (
-        <Fragment>
+        <>
           <SaveButton
             mutationOptions={{
               onSuccess: () => {
@@ -51,7 +51,7 @@ const ReviewEditToolbar = (props: ToolbarProps) => {
             type="button"
           />
           <DeleteButton record={record} resource={resource} />
-        </Fragment>
+        </>
       )}
     </Toolbar>
   );

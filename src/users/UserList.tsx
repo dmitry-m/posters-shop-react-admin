@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { ManageAccounts } from "@mui/icons-material";
-import { useMediaQuery, Theme } from "@mui/material";
+import { useMediaQuery, Theme, Chip } from "@mui/material";
 import * as React from "react";
 import {
   BooleanField,
@@ -12,6 +12,7 @@ import {
   SearchInput,
   TextField,
   useListContext,
+  useTranslate,
 } from "react-admin";
 
 import MobileGrid from "./MobileGrid";
@@ -21,9 +22,23 @@ import UserLinkField from "./UserLinkField";
 
 import { User } from "../types";
 
+const QuickFilter = ({
+  label,
+  source,
+  defaultValue,
+}: {
+  label: string;
+  source: string;
+  defaultValue: boolean | string;
+}) => {
+  const translate = useTranslate();
+  return <Chip sx={{ marginBottom: 1 }} label={translate(label)} />;
+};
+
 const userFilters = [
   <SearchInput source="search" alwaysOn />,
   <RoleInput source="role" alwaysOn />,
+  <QuickFilter source="is_admin" label="resources.users.roles.admin" defaultValue />,
 ];
 const PostBulkActionButtons = () => {
   const { selectedIds, data } = useListContext();

@@ -1,6 +1,7 @@
-import * as React from "react";
 import { Card, CardMedia } from "@mui/material";
+import * as React from "react";
 import { useRecordContext } from "react-admin";
+
 import { Product } from "../types";
 
 const Poster = () => {

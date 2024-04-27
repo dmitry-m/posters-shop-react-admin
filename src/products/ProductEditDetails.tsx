@@ -1,12 +1,8 @@
-import * as React from "react";
-import {
-  NumberInput,
-  ReferenceInput,
-  required,
-  SelectInput,
-  TextInput,
-} from "react-admin";
 import { InputAdornment, Grid } from "@mui/material";
+import * as React from "react";
+import { NumberInput, ReferenceInput, required, SelectInput, TextInput } from "react-admin";
+
+const req = [required()];
 
 export const ProductEditDetails = () => (
   <Grid container columnSpacing={2}>
@@ -38,7 +34,7 @@ export const ProductEditDetails = () => (
         fullWidth
       />
     </Grid>
-    <Grid item xs={0} sm={4}></Grid>
+    <Grid item xs={0} sm={4} />
     <Grid item xs={12} sm={4}>
       <NumberInput
         source="price"
@@ -58,4 +54,4 @@ export const ProductEditDetails = () => (
   </Grid>
 );
 
-const req = [required()];
+export default ProductEditDetails;

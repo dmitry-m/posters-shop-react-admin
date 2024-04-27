@@ -1,6 +1,6 @@
 // in src/comments.js
-import * as React from "react";
 import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
+import * as React from "react";
 import {
   DateField,
   EditButton,
@@ -13,6 +13,7 @@ import {
 import AvatarField from "./AvatarField";
 import ColoredNumberField from "./ColoredNumberField";
 import SegmentsField from "./SegmentsField";
+
 import { Customer } from "../types";
 
 const MobileGrid = () => {

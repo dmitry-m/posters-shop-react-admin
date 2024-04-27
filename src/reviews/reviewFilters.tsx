@@ -10,7 +10,7 @@ import {
 import { Customer } from "../types";
 
 const reviewFilters = [
-  <SearchInput source="search" alwaysOn />,
+  <SearchInput source="search" alwaysOn key="searchFilter" />,
   <SelectInput
     source="status"
     choices={[
@@ -18,22 +18,22 @@ const reviewFilters = [
       { id: "pending", name: "Pending" },
       { id: "rejected", name: "Rejected" },
     ]}
+    key="statusFilter"
   />,
-  <ReferenceInput source="customer_id" reference="customers">
+  <ReferenceInput source="customer_id" reference="customers" key="customerFilter">
     <AutocompleteInput
       optionText={(choice?: Customer) =>
-        choice?.id // the empty choice is { id: '' }
-          ? `${choice.first_name} ${choice.last_name}`
-          : ""
+        choice?.id ? `${choice.first_name} ${choice.last_name}` : ""
       }
       sx={{ minWidth: 200 }}
+      key="customerAutocomplete"
     />
   </ReferenceInput>,
-  <ReferenceInput source="product_id" reference="products">
-    <AutocompleteInput optionText="reference" />
+  <ReferenceInput source="product_id" reference="products" key="productFilter">
+    <AutocompleteInput optionText="reference" key="productAutocomplete" />
   </ReferenceInput>,
-  <DateInput source="date_gte" />,
-  <DateInput source="date_lte" />,
+  <DateInput source="date_gte" key="dateGteFilter" />,
+  <DateInput source="date_lte" key="dateLteFilter" />,
 ];
 
 export default reviewFilters;

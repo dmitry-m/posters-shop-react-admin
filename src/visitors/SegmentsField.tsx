@@ -1,13 +1,16 @@
-import * as React from "react";
 import { Stack, Chip } from "@mui/material";
+import * as React from "react";
 import { FieldProps, useTranslate, useRecordContext } from "react-admin";
+
 import segments from "../segments/data";
 import { Customer } from "../types";
 
-const segmentsById = segments.reduce((acc, segment) => {
+type SegmentsById = { [key: string]: { [key: string]: string } };
+
+const segmentsById: SegmentsById = segments.reduce((acc, segment) => {
   acc[segment.id] = segment;
   return acc;
-}, {} as { [key: string]: any });
+}, {} as SegmentsById);
 
 const SegmentsField = (_: FieldProps) => {
   const translate = useTranslate();
@@ -18,11 +21,7 @@ const SegmentsField = (_: FieldProps) => {
   return (
     <Stack direction="row" gap={1} flexWrap="wrap">
       {record.groups.map((segmentId) => (
-        <Chip
-          size="small"
-          key={segmentId}
-          label={translate(segmentsById[segmentId].name)}
-        />
+        <Chip size="small" key={segmentId} label={translate(segmentsById[segmentId].name)} />
       ))}
     </Stack>
   );

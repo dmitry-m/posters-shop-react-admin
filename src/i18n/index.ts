@@ -1,4 +1,5 @@
 import polyglotI18nProvider from "ra-i18n-polyglot";
+
 import russianMessages from "./ru";
 
 export const i18nProvider = polyglotI18nProvider(
@@ -14,7 +15,7 @@ export const i18nProvider = polyglotI18nProvider(
   [
     { locale: "en", name: "English" },
     { locale: "ru", name: "Русский" },
-  ]
+  ],
 );
 
 export default i18nProvider;

@@ -27,16 +27,149 @@ import {
 import order from "../orders";
 import review from "../reviews";
 import StarRatingField from "../reviews/StarRatingField";
-import { Order as OrderRecord, Review as ReviewRecord, Customer } from "../types";
+import { Order as OrderRecord, Review as ReviewRecord, Customer, Product } from "../types";
 
-const Aside = () => {
-  const record = useRecordContext<Customer>();
+interface AsideEvent {
+  type: string;
+  date: Date;
+  data: OrderRecord | ReviewRecord;
+}
+
+const mixOrdersAndReviews = (orders?: OrderRecord[], reviews?: ReviewRecord[]): AsideEvent[] => {
+  const eventsFromOrders = orders
+    ? orders.map<AsideEvent>((orderItem) => ({
+        type: "order",
+        date: orderItem.date,
+        data: orderItem,
+      }))
+    : [];
+  const eventsFromReviews = reviews
+    ? reviews.map<AsideEvent>((reviewItem) => ({
+        type: "review",
+        date: reviewItem.date,
+        data: reviewItem,
+      }))
+    : [];
+  const events = eventsFromOrders.concat(eventsFromReviews);
+  events.sort((e1, e2) => new Date(e2.date).getTime() - new Date(e1.date).getTime());
+  return events;
+};
+
+const OrderTitle = () => {
+  const record = useRecordContext<OrderRecord>();
+  const translate = useTranslate();
+  if (!record) return null;
   return (
-    <Box width={400} display={{ xs: "none", lg: "block" }}>
-      {record && <EventList />}
-    </Box>
+    <>
+      {translate("pos.events.order.title", {
+        smart_count: record.basket.length,
+      })}
+    </>
   );
 };
+
+const Order = () => {
+  const record = useRecordContext<OrderRecord>();
+  const [locale] = useLocaleState();
+  if (!record) return null;
+  return (
+    <>
+      <Typography variant="body2" color="textSecondary" gutterBottom>
+        {new Date(record.date).toLocaleString(locale, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        })}
+      </Typography>
+      <Typography variant="body2" color="textSecondary" gutterBottom>
+        Reference &nbsp;#{record.reference}&nbsp;-&nbsp;
+        <TextField source="status" />
+      </Typography>
+      <Typography variant="body2" color="textSecondary">
+        <NumberField source="total" options={{ style: "currency", currency: "USD" }} />
+      </Typography>
+    </>
+  );
+};
+
+const ReviewTitle = () => {
+  const record = useRecordContext<ReviewRecord>();
+  const translate = useTranslate();
+  const { referenceRecord } = useReference<Product>({
+    reference: "products",
+    id: record?.product_id,
+  });
+  if (!record) return null;
+  return (
+    <>
+      {translate("pos.events.review.title", {
+        product: referenceRecord?.reference,
+      })}
+    </>
+  );
+};
+
+const Review = () => {
+  const [locale] = useLocaleState();
+  const record = useRecordContext<ReviewRecord>();
+  if (!record) return null;
+  return (
+    <>
+      <Typography variant="body2" color="textSecondary" gutterBottom>
+        {new Date(record.date).toLocaleString(locale, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        })}
+      </Typography>
+      <Typography
+        variant="body2"
+        color="textSecondary"
+        sx={{
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }}
+        gutterBottom
+      >
+        {record.comment}
+      </Typography>
+      <Typography variant="body2" color="textSecondary">
+        <StarRatingField />
+      </Typography>
+    </>
+  );
+};
+
+const Timeline = ({ events }: { events: AsideEvent[] }) => (
+  <Stepper orientation="vertical" sx={{ my: 1, ml: 1.5 }}>
+    {events.map((event) => (
+      <Step key={`${event.type}-${event.data.id}`} expanded active completed>
+        <Link to={`/${event.type === "order" ? "commands" : "reviews"}/${event.data.id}`}>
+          <RecordContextProvider value={event.data}>
+            <StepLabel
+              icon={
+                event.type === "order" ? (
+                  <order.icon color="disabled" sx={{ pl: 0.5 }} />
+                ) : (
+                  <review.icon color="disabled" sx={{ pl: 0.5 }} />
+                )
+              }
+            >
+              {event.type === "order" ? <OrderTitle /> : <ReviewTitle />}
+            </StepLabel>
+            <StepContent>{event.type === "order" ? <Order /> : <Review />}</StepContent>
+          </RecordContextProvider>
+        </Link>
+      </Step>
+    ))}
+  </Stepper>
+);
 
 const EventList = () => {
   const record = useRecordContext<Customer>();
@@ -52,7 +185,9 @@ const EventList = () => {
     sort: { field: "date", order: "DESC" },
     filter: { customer_id: record.id },
   });
+
   const events = mixOrdersAndReviews(orders, reviews);
+
   console.log({ totalOrders });
   return (
     <Box ml={2}>
@@ -136,145 +271,12 @@ const EventList = () => {
   );
 };
 
-interface AsideEvent {
-  type: string;
-  date: Date;
-  data: OrderRecord | ReviewRecord;
-}
-
-const mixOrdersAndReviews = (orders?: OrderRecord[], reviews?: ReviewRecord[]): AsideEvent[] => {
-  const eventsFromOrders = orders
-    ? orders.map<AsideEvent>((order) => ({
-        type: "order",
-        date: order.date,
-        data: order,
-      }))
-    : [];
-  const eventsFromReviews = reviews
-    ? reviews.map<AsideEvent>((review) => ({
-        type: "review",
-        date: review.date,
-        data: review,
-      }))
-    : [];
-  const events = eventsFromOrders.concat(eventsFromReviews);
-  events.sort((e1, e2) => new Date(e2.date).getTime() - new Date(e1.date).getTime());
-  return events;
-};
-
-const Timeline = ({ events }: { events: AsideEvent[] }) => (
-  <Stepper orientation="vertical" sx={{ my: 1, ml: 1.5 }}>
-    {events.map((event) => (
-      <Step key={`${event.type}-${event.data.id}`} expanded active completed>
-        <Link to={`/${event.type === "order" ? "commands" : "reviews"}/${event.data.id}`}>
-          <RecordContextProvider value={event.data}>
-            <StepLabel
-              icon={
-                event.type === "order" ? (
-                  <order.icon color="disabled" sx={{ pl: 0.5 }} />
-                ) : (
-                  <review.icon color="disabled" sx={{ pl: 0.5 }} />
-                )
-              }
-            >
-              {event.type === "order" ? <OrderTitle /> : <ReviewTitle />}
-            </StepLabel>
-            <StepContent>{event.type === "order" ? <Order /> : <Review />}</StepContent>
-          </RecordContextProvider>
-        </Link>
-      </Step>
-    ))}
-  </Stepper>
-);
-
-const OrderTitle = () => {
-  const record = useRecordContext();
-  const translate = useTranslate();
-  if (!record) return null;
+const Aside = () => {
+  const record = useRecordContext<Customer>();
   return (
-    <>
-      {translate("pos.events.order.title", {
-        smart_count: record.basket.length,
-      })}
-    </>
-  );
-};
-
-const Order = () => {
-  const record = useRecordContext();
-  const [locale] = useLocaleState();
-  if (!record) return null;
-  return (
-    <>
-      <Typography variant="body2" color="textSecondary" gutterBottom>
-        {new Date(record.date).toLocaleString(locale, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        })}
-      </Typography>
-      <Typography variant="body2" color="textSecondary" gutterBottom>
-        Reference &nbsp;#{record.reference}&nbsp;-&nbsp;
-        <TextField source="status" />
-      </Typography>
-      <Typography variant="body2" color="textSecondary">
-        <NumberField source="total" options={{ style: "currency", currency: "USD" }} />
-      </Typography>
-    </>
-  );
-};
-
-const ReviewTitle = () => {
-  const record = useRecordContext();
-  const translate = useTranslate();
-  const { referenceRecord } = useReference({
-    reference: "products",
-    id: record?.product_id,
-  });
-  if (!record) return null;
-  return (
-    <>
-      {translate("pos.events.review.title", {
-        product: referenceRecord?.reference,
-      })}
-    </>
-  );
-};
-
-const Review = () => {
-  const [locale] = useLocaleState();
-  const record = useRecordContext();
-  if (!record) return null;
-  return (
-    <>
-      <Typography variant="body2" color="textSecondary" gutterBottom>
-        {new Date(record.date).toLocaleString(locale, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        })}
-      </Typography>
-      <Typography
-        variant="body2"
-        color="textSecondary"
-        sx={{
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-        }}
-        gutterBottom
-      >
-        {record.comment}
-      </Typography>
-      <Typography variant="body2" color="textSecondary">
-        <StarRatingField />
-      </Typography>
-    </>
+    <Box width={400} display={{ xs: "none", lg: "block" }}>
+      {record && <EventList />}
+    </Box>
   );
 };
 

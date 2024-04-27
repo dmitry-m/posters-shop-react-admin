@@ -29,11 +29,14 @@ export default class TokenManager {
     }
     console.log("timer init");
     this.refreshInterval = window.setInterval(
-      async () => {
-        const auth = await this.fetchAuth.bind(this)();
-        if (auth) return this.setToken.bind(this)(auth.accessToken);
-        this.eraseToken.bind(this)();
+      () => {
+        void (async () => {
+          const auth = await this.fetchAuth.bind(this)();
+          if (auth) this.setToken.bind(this)(auth.accessToken);
+          else this.eraseToken.bind(this)();
+        })();
       },
+
       (delay - 5) * 1000,
     ); // Validity period of the token in seconds, minus 5 seconds
   }
@@ -47,7 +50,7 @@ export default class TokenManager {
         method: "GET",
         credentials: "include",
       })
-      .then(({ json }) => {
+      .then(({ json }: { json: AuthInterface }) => {
         console.log("token was received");
         return json;
       })

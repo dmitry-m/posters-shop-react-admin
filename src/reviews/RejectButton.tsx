@@ -1,19 +1,10 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
 import ThumbDown from "@mui/icons-material/ThumbDown";
-import {
-  useTranslate,
-  useUpdate,
-  useNotify,
-  useRedirect,
-  useRecordContext,
-} from "react-admin";
+import Button from "@mui/material/Button";
+import * as React from "react";
+import { useTranslate, useUpdate, useNotify, useRedirect, useRecordContext } from "react-admin";
+
 import { Review } from "../types";
 
-/**
- * This custom button demonstrate using a custom action to update data
- */
 const RejectButton = () => {
   const translate = useTranslate();
   const notify = useNotify();
@@ -37,7 +28,7 @@ const RejectButton = () => {
           type: "error",
         });
       },
-    }
+    },
   );
 
   return record && record.status === "pending" ? (
@@ -47,9 +38,7 @@ const RejectButton = () => {
       size="small"
       onClick={() => reject()}
       sx={{ borderColor: (theme) => theme.palette.error.main }}
-      startIcon={
-        <ThumbDown sx={{ color: (theme) => theme.palette.error.main }} />
-      }
+      startIcon={<ThumbDown sx={{ color: (theme) => theme.palette.error.main }} />}
       disabled={isLoading}
     >
       {translate("resources.reviews.action.reject")}
@@ -57,10 +46,6 @@ const RejectButton = () => {
   ) : (
     <span />
   );
-};
-
-RejectButton.propTypes = {
-  record: PropTypes.any,
 };
 
 export default RejectButton;

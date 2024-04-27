@@ -1,15 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { useMediaQuery, Theme } from "@mui/material";
 import { subDays, startOfDay } from "date-fns";
-import { useMemo, CSSProperties, useEffect } from "react";
-import {
-  Title,
-  useAuthProvider,
-  useGetIdentity,
-  useGetList,
-  usePermissions,
-  useRedirect,
-} from "react-admin";
+import { useMemo, CSSProperties } from "react";
+import { Title, useGetList, usePermissions } from "react-admin";
 
 import MonthlyRevenue from "./MonthlyRevenue";
 import NbNewOrders from "./NbNewOrders";
@@ -19,7 +12,6 @@ import PendingOrders from "./PendingOrders";
 import PendingReviews from "./PendingReviews";
 import Welcome from "./Welcome";
 
-import { MyAuthProvider } from "../providers/authProvider";
 import { Order } from "../types";
 
 interface OrderStats {

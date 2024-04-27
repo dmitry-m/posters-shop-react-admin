@@ -6,14 +6,9 @@ interface Props {
 }
 
 const ProductReferenceField = (
-  props: Props & Omit<ReferenceFieldProps, "source" | "reference" | "children">
+  props: Props & Omit<ReferenceFieldProps, "source" | "reference" | "children">,
 ) => (
-  <ReferenceField
-    label="Product"
-    source="product_id"
-    reference="products"
-    {...props}
-  >
+  <ReferenceField label="Product" source="product_id" reference="products" {...props}>
     <TextField source="reference" />
   </ReferenceField>
 );

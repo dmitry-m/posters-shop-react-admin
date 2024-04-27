@@ -12,7 +12,7 @@ import {
   useGetList,
 } from "react-admin";
 
-import { Category, Product } from "../types";
+import { Category } from "../types";
 
 const Aside = () => {
   const { data } = useGetList<Category>("categories", {

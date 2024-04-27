@@ -6,7 +6,6 @@ import {
   MenuItemLink,
   MenuProps,
   useSidebarState,
-  useGetIdentity,
   usePermissions,
 } from "react-admin";
 
@@ -17,10 +16,8 @@ import products from "../products";
 import reviews from "../reviews";
 import visitors from "../visitors";
 
-type MenuName = "menuCatalog" | "menuSales" | "menuCustomers" | "menuDashboard";
-
 const Menu = ({ dense = false }: MenuProps) => {
-  const { isLoading, permissions } = usePermissions<"admin" | "user">();
+  const { permissions } = usePermissions<"admin" | "user">();
   const translate = useTranslate();
   const [open] = useSidebarState();
 

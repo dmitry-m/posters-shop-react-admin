@@ -1,10 +1,12 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import * as React from "react";
-import { Link, useTranslate, useGetMany, useRecordContext } from "react-admin";
+import { Link, useTranslate, useGetMany, useRecordContext, Identifier } from "react-admin";
 
 import { TableCellRight } from "./TableCellRight";
 
-import { Order, Product } from "../types";
+import { BasketItem, Order, Product } from "../types";
+
+type ProductsById = { [key: Identifier]: Product };
 
 const Basket = () => {
   const record = useRecordContext<Order>();
@@ -17,13 +19,13 @@ const Basket = () => {
     { ids: productIds },
     { enabled: !!record },
   );
-  const productsById = products
+  const productsById: ProductsById = products
     ? products.reduce((acc, product) => {
         acc[product.id] = product;
         return acc;
-      }, {} as any)
+      }, {} as Product)
     : {};
-
+  console.log({ productsById });
   if (isLoading || !record || !products) return null;
 
   return (
@@ -39,7 +41,7 @@ const Basket = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {record.basket.map((item: any) => (
+        {record.basket.map((item: BasketItem) => (
           <TableRow key={item.product_id}>
             <TableCell>
               <Link to={`/products/${item.product_id}`}>

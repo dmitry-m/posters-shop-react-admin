@@ -679,6 +679,11 @@
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.15.2.tgz#35726510d332ba5349c6398d13259d5da184553d"
   integrity sha512-+Rnav+CaoTE5QJc4Jcwh5toUpnVLKYbpU6Ys0zqbakqbaLQHeglLVHPfxOiQqdNmUy5C2lXz5dwC6tQNX2JW2Q==
 
+"@remix-run/router@1.16.0":
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.16.0.tgz#0e10181e5fec1434eb071a9bc4bdaac843f16dcc"
+  integrity sha512-Quz1KOffeEf/zwkCBM3kBtH4ZoZ+pT3xIXBG4PPW/XFtDP7EGhtTiC2+gpL9GnR7+Qdet5Oa6cYSvwKYg6kN9Q==
+
 "@tiptap/core@^2.0.3", "@tiptap/core@^2.2.4":
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.2.4.tgz#6f957678eb733e70b9282fb5098d284a77bd09a3"
@@ -3384,6 +3389,22 @@ ra-core@^4.16.12, ra-core@^4.16.2:
     react-is "^17.0.2"
     react-query "^3.32.1"
 
+ra-core@^4.16.16:
+  version "4.16.16"
+  resolved "https://registry.yarnpkg.com/ra-core/-/ra-core-4.16.16.tgz#b4f2f2fa2a7c73cb74a5b5b5d0ca33e8e705337f"
+  integrity sha512-WDeS68tx3VNWc57SAnpwMWftHIop18jxUyn5LYqA529j5XIjx8e3T2M6GtpElESLFZzpfS7O7Puo0TZBzA05zw==
+  dependencies:
+    clsx "^1.1.1"
+    date-fns "^2.19.0"
+    eventemitter3 "^4.0.7"
+    inflection "~1.12.0"
+    jsonexport "^3.2.0"
+    lodash "~4.17.5"
+    prop-types "^15.6.1"
+    query-string "^7.1.1"
+    react-is "^17.0.2"
+    react-query "^3.32.1"
+
 ra-data-simple-rest@^4.16.2:
   version "4.16.12"
   resolved "https://registry.yarnpkg.com/ra-data-simple-rest/-/ra-data-simple-rest-4.16.12.tgz#e7aa11dc7ab0221218f2a32192b9f0c80e06af0b"
@@ -3398,6 +3419,14 @@ ra-i18n-polyglot@^4.16.12:
   dependencies:
     node-polyglot "^2.2.2"
     ra-core "^4.16.12"
+
+ra-i18n-polyglot@^4.16.16:
+  version "4.16.16"
+  resolved "https://registry.yarnpkg.com/ra-i18n-polyglot/-/ra-i18n-polyglot-4.16.16.tgz#8f24839d8e5463ccab1abbc4bf537ac239879d1b"
+  integrity sha512-pDqpYWKekSb6b+WtCeX2n0DO7RwdnzY7lX7R3ElaflWgrHnCVPE4D2JXQAStWwOQgNh60hF1WmAw9pqQD0i+jw==
+  dependencies:
+    node-polyglot "^2.2.2"
+    ra-core "^4.16.16"
 
 ra-input-rich-text@^4.16.2:
   version "4.16.12"
@@ -3542,6 +3571,13 @@ react-router@6.22.2, react-router@^6.1.0:
   integrity sha512-YD3Dzprzpcq+tBMHBS822tCjnWD3iIZbTeSXMY9LPSG541EfoBGyZ3bS25KEnaZjLcmQpw2AVLkFyfgXY8uvcw==
   dependencies:
     "@remix-run/router" "1.15.2"
+
+react-router@^6.23.0:
+  version "6.23.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.23.0.tgz#2f2d7492c66a6bdf760be4c6bdf9e1d672fa154b"
+  integrity sha512-wPMZ8S2TuPadH0sF5irFGjkNLIcRvOSaEe7v+JER8508dyJumm6XZB1u5kztlX0RVq6AzRVndzqcUh6sFIauzA==
+  dependencies:
+    "@remix-run/router" "1.16.0"
 
 react-smooth@^4.0.0:
   version "4.0.0"
