@@ -8,8 +8,17 @@ import { UserForm } from "./UserForm";
 
 import { User } from "../types";
 
-export const validateForm = (values: Record<string, string>): Record<string, any> => {
-  const errors: { [key: string]: any } = {};
+interface Errors {
+  [key: string]:
+    | string
+    | {
+        message: string;
+        args: Record<string, string | number>;
+      };
+}
+
+export const validateForm = (values: Record<string, string>): Errors => {
+  const errors: Errors = {};
 
   const requiredFields = ["name", "password", "confirm_password", "email"] as const;
   const minLengthFields = ["password", "confirm_password"] as const;

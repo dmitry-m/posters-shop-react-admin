@@ -22,7 +22,7 @@ const ReviewCreate = () => {
   const redirect = useRedirect();
   const location = useLocation();
 
-  const onSuccess = (_: any) => {
+  const onSuccess = () => {
     const record = getRecordFromLocation(location) as Product & { product_id: string };
     notify("ra.notification.created");
     if (record && record.product_id) {

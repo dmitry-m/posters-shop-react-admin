@@ -83,9 +83,3 @@ export interface Review extends RaRecord {
   product_id: Identifier;
   comment: string;
 }
-
-declare global {
-  interface Window {
-    restServer: any;
-  }
-}

@@ -9,7 +9,11 @@ interface OwnProps {
   source?: string;
 }
 
-const StarRatingField = ({ size = "large", label, source }: FieldProps & OwnProps) => {
+const StarRatingField = ({
+  size = "large",
+  label = "resources.reviews.fields.rating",
+  source = "rating",
+}: FieldProps & OwnProps) => {
   const record = useRecordContext();
   if (!record) return null;
 
@@ -36,11 +40,6 @@ const StarRatingField = ({ size = "large", label, source }: FieldProps & OwnProp
         ))}
     </Box>
   );
-};
-
-StarRatingField.defaultProps = {
-  label: "resources.reviews.fields.rating",
-  source: "rating",
 };
 
 export default StarRatingField;

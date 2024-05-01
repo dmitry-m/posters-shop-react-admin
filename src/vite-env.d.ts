@@ -5,6 +5,7 @@ interface ImportMetaEnv extends Readonly<Record<string, string>> {
   VITE_SIGNUP_URL: string;
   VITE_LOGOUT_URL: string;
   VITE_TOKEN_URL: string;
+  VITE_MODE: string;
 }
 
 interface ImportMeta {

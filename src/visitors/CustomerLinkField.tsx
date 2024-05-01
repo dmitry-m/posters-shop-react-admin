@@ -5,7 +5,10 @@ import FullNameField from "./FullNameField";
 
 import { Customer } from "../types";
 
-const CustomerLinkField = (_: FieldProps<Customer>): JSX.Element => {
+const CustomerLinkField = ({
+  source = "id",
+  label = "resources.customers.fields.name",
+}: FieldProps<Customer>): JSX.Element => {
   const record = useRecordContext<Customer>();
   if (!record) {
     return <> </>;
@@ -15,11 +18,6 @@ const CustomerLinkField = (_: FieldProps<Customer>): JSX.Element => {
       <FullNameField size="25" />
     </Link>
   );
-};
-
-CustomerLinkField.defaultProps = {
-  source: "id",
-  label: "resources.customers.fields.name",
 };
 
 export default CustomerLinkField;

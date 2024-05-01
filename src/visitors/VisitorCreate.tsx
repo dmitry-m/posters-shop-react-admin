@@ -7,11 +7,11 @@ interface Errors {
     | string
     | {
         message: string;
-        args: any;
+        args: Record<string, string | number>;
       };
 }
 
-export const validateForm = (values: Record<string, any>): Record<string, any> => {
+export const validateForm = (values: Record<string, string>): Errors => {
   const errors: Errors = {};
   if (!values.first_name) {
     errors.first_name = "ra.validation.required";

@@ -21,7 +21,10 @@ export const restProvider = simpleRestProvider(API_URL, httpClient);
 
 export const dataProvider = {
   ...restProvider,
-  update: (resource: string, params: UpdateParams & { data: { id?: string } }): Promise<any> => {
+  update: (
+    resource: string,
+    params: UpdateParams & { data: { id?: string } },
+  ): Promise<{ data: { id: string; [key: string]: string } }> => {
     const {
       data: { id, ...restData },
     } = params;

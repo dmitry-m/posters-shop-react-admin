@@ -3,7 +3,7 @@ import { FC, createElement, ReactNode } from "react";
 import { Link, To } from "react-router-dom";
 
 interface Props {
-  icon: FC<any>;
+  icon: FC<React.SVGProps<SVGSVGElement>>;
   to: To;
   title: string;
   subtitle: ReactNode;

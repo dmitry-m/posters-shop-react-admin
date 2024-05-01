@@ -24,9 +24,9 @@ import { Link } from "react-router-dom";
 
 import CustomPage from "./CustomPage";
 
-import { MyAuthProvider } from "../providers/authProvider";
+import { FormValues, MyAuthProvider } from "../providers/authProvider";
 
-const passwordRepeatValidation = (value: string, allValues: { [key: string]: any }) => {
+const passwordRepeatValidation = (value: string, allValues: { [key: string]: string }) => {
   if (value !== allValues.password) return "pos.auth.password_mismatch";
 
   return undefined;
@@ -170,8 +170,3 @@ const Register = () => {
 };
 
 export default Register;
-
-interface FormValues {
-  username?: string;
-  password?: string;
-}

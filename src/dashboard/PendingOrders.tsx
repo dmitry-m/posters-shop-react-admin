@@ -10,8 +10,7 @@ interface Props {
   orders?: Order[];
 }
 
-const PendingOrders = (props: Props) => {
-  const { orders = [] } = props;
+const PendingOrders = ({ orders = [] }: Props) => {
   const translate = useTranslate();
 
   return (
@@ -24,10 +23,6 @@ const PendingOrders = (props: Props) => {
       </List>
     </Card>
   );
-};
-
-PendingOrders.defaultProps = {
-  orders: [],
 };
 
 export default PendingOrders;

@@ -24,7 +24,7 @@ const LinkToRelatedProducts = () => {
       }}
       sx={{ display: "inline-flex", alignItems: "center" }}
     >
-      <products.icon sx={{ paddingRight: "0.5em" }} />
+      <products.icon sx={{ marginRight: "0.5em", fontSize: "1.5em" }} />
       {translate("resources.categories.fields.products")}
     </Button>
   );

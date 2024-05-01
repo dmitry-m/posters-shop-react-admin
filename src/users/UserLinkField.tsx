@@ -5,7 +5,7 @@ import FullNameField from "./FullNameField";
 
 import { User } from "../types";
 
-const UserLinkField = (_: FieldProps<User>) => {
+const UserLinkField = ({ source = "name" }: FieldProps<User>) => {
   const record = useRecordContext<User>();
   if (!record) {
     return null;
@@ -15,10 +15,6 @@ const UserLinkField = (_: FieldProps<User>) => {
       <FullNameField />
     </Link>
   );
-};
-
-UserLinkField.defaultProps = {
-  source: "name",
 };
 
 export default UserLinkField;

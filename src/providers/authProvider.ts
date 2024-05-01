@@ -6,10 +6,10 @@ import TokenManager from "./JWTManager";
 
 import { AuthInterface } from "../types";
 
-type FormValues = {
-  username: string;
-  password: string;
-};
+export interface FormValues {
+  username?: string;
+  password?: string;
+}
 
 interface ResponseError extends Error {
   status?: number;
@@ -17,7 +17,7 @@ interface ResponseError extends Error {
 
 export type MyAuthProvider = AuthProvider & {
   setAuth: (data: AuthInterface) => Promise<{ redirectTo?: string | boolean } | void>;
-  signUp: (params: any) => Promise<{ redirectTo?: string | boolean } | void>;
+  signUp: (params: FormValues) => Promise<{ redirectTo?: string | boolean } | void>;
 };
 
 export const inMemoryJWT = new TokenManager(TOKEN_URL);

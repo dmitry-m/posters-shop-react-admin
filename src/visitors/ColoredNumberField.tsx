@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useRecordContext, NumberField, NumberFieldProps } from "react-admin";
 
+delete NumberField.defaultProps;
+
 const ColoredNumberField = ({ source, ...props }: NumberFieldProps) => {
   const record = useRecordContext(props);
   if (!record || !source) {
@@ -13,6 +15,6 @@ const ColoredNumberField = ({ source, ...props }: NumberFieldProps) => {
   );
 };
 
-ColoredNumberField.defaultProps = NumberField.defaultProps;
+// ColoredNumberField.defaultProps = NumberField.defaultProps;
 
 export default ColoredNumberField;

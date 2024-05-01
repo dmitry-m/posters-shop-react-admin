@@ -8,8 +8,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const MonthlyRevenue = (props: Props) => {
-  const { value, children } = props;
+const MonthlyRevenue = ({ value = "0.00", children = null }: Props) => {
   const translate = useTranslate();
   return (
     <CardWithIcon
@@ -21,11 +20,6 @@ const MonthlyRevenue = (props: Props) => {
       {children}
     </CardWithIcon>
   );
-};
-
-MonthlyRevenue.defaultProps = {
-  value: "0.00",
-  children: null,
 };
 
 export default MonthlyRevenue;

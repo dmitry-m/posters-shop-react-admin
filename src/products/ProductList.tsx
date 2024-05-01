@@ -50,7 +50,7 @@ export const productFilters = [
   />,
 ];
 
-const ListActions = ({ isSmall }: any) => (
+const ListActions = ({ isSmall }: { isSmall: boolean }) => (
   <TopToolbar>
     {isSmall && <FilterButton />}
     <SortButton fields={["reference", "sales", "stock"]} />

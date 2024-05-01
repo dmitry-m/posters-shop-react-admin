@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 
 export type ComponentsTheme = {
-  [key: string]: any;
+  [key: string]: string;
 };
 
 export interface RaThemeOptions extends MuiThemeOptions {
