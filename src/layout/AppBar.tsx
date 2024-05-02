@@ -4,7 +4,7 @@ import { AppBar, TitlePortal } from "react-admin";
 
 import { AppBarToolbar } from "./AppBarToolbar";
 import Logo from "./Logo";
-import CustomUserMenu from "./UserMenu";
+import { CustomUserMenu } from "./UserMenu";
 
 const CustomAppBar = () => {
   const isLargeEnough = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));

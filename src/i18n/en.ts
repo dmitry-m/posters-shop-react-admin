@@ -41,7 +41,7 @@ const customEnglishMessages: TranslationMessages = {
         title: "Welcome to the GitHub demo of a fictional poster shop using react-admin",
         subtitle:
           "This is the admin panel interface for a fictional poster shop. Feel free to explore and modify data. Enjoy your experience!",
-        ra_button: "API for this interface, built with nest.js",
+        ra_button: "API for this app, built with nest.js",
         demo_button: "Source code for this demo",
       },
     },

@@ -1,9 +1,9 @@
-import { Card, Box, Typography, Divider } from "@mui/material";
-import { FC, createElement, ReactNode } from "react";
+import { Card, Box, Typography, Divider, SvgIcon } from "@mui/material";
+import { createElement, ReactNode } from "react";
 import { Link, To } from "react-router-dom";
 
 interface Props {
-  icon: FC<React.SVGProps<SVGSVGElement>>;
+  icon: typeof SvgIcon;
   to: To;
   title: string;
   subtitle: ReactNode;
