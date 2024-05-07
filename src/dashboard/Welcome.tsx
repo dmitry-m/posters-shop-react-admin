@@ -41,14 +41,14 @@ const Welcome = () => {
           >
             <Button
               variant="contained"
-              href="https://github.com/dmitry-m/nest-prisma-react-admin-api"
+              href="https://github.com/dmitry-m/posters-shop-nest-prisma-api"
               startIcon={<CodeIcon />}
             >
               {translate("pos.dashboard.welcome.ra_button")}
             </Button>
             <Button
               variant="contained"
-              href="https://github.com/dmitry-m/react-admin-posters-shop"
+              href="https://github.com/dmitry-m/posters-shop-react-admin"
               startIcon={<CodeIcon />}
             >
               {translate("pos.dashboard.welcome.demo_button")}

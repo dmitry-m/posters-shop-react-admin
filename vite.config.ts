@@ -1,22 +1,34 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig, loadEnv } from "vite";
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  define: {
-    "process.env": process.env,
-  },
-  server: {
-    host: true,
-    proxy: {
-      // with options: http://localhost:5173/api/bar-> http://jsonplaceholder.typicode.com/bar
-      "/api": {
-        target: "http://localhost:2999",
-        changeOrigin: true,
-        // rewrite: (path) => path.replace(/^\/api/, ""),
+export default ({ mode }: { mode: string }) => {
+  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+
+  return defineConfig({
+    base: "/",
+    plugins: [react()],
+    define: {
+      "process.env": process.env,
+    },
+    preview: {
+      strictPort: true,
+      host: "0.0.0.0",
+      proxy: {
+        "/api": {
+          target: process.env.VITE_API_URL,
+          changeOrigin: true,
+        },
       },
     },
-  },
-  base: "./",
-});
+    server: {
+      strictPort: true,
+      host: "0.0.0.0",
+      proxy: {
+        "/api": {
+          target: process.env.VITE_API_URL,
+          changeOrigin: true,
+        },
+      },
+    },
+  });
+};

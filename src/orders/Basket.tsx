@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import * as React from "react";
 import { Link, useTranslate, useGetMany, useRecordContext, Identifier } from "react-admin";
@@ -25,7 +26,7 @@ const Basket = () => {
         return acc;
       }, {} as Product)
     : {};
-  console.log({ productsById });
+
   if (isLoading || !record || !products) return null;
 
   return (
@@ -41,8 +42,8 @@ const Basket = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {record.basket.map((item: BasketItem) => (
-          <TableRow key={item.product_id}>
+        {record.basket.map((item: BasketItem, index) => (
+          <TableRow key={`${item.product_id} ${index}`}>
             <TableCell>
               <Link to={`/products/${item.product_id}`}>
                 {productsById[item.product_id].reference}

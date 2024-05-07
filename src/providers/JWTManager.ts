@@ -22,12 +22,10 @@ export default class TokenManager {
   }
 
   private setRefreshTokenInterval(delay: number): void {
-    console.log({ delay });
     if (this.refreshInterval) {
-      console.log("timer clear");
       window.clearInterval(this.refreshInterval);
     }
-    console.log("timer init");
+
     this.refreshInterval = window.setInterval(
       () => {
         void (async () => {
@@ -42,16 +40,12 @@ export default class TokenManager {
   }
 
   public async fetchAuth(): Promise<AuthInterface | null> {
-    console.log("fetch token");
-    console.log({ url: this.refreshEndpoint });
-
     return fetchUtils
       .fetchJson(this.refreshEndpoint, {
         method: "GET",
         credentials: "include",
       })
       .then(({ json }: { json: AuthInterface }) => {
-        console.log("token was received");
         return json;
       })
       .catch(() => {
@@ -60,8 +54,6 @@ export default class TokenManager {
   }
 
   public async getFreshToken(): Promise<string | null> {
-    console.log("get token");
-
     if (this.inMemoryJWT) {
       return this.inMemoryJWT;
     }
@@ -74,7 +66,6 @@ export default class TokenManager {
         if (auth) return this.setToken(auth.accessToken);
         return this.eraseToken();
       } catch (error) {
-        console.error(error);
         this.eraseToken();
         if (error instanceof Error) return error.message;
       } finally {
@@ -89,7 +80,6 @@ export default class TokenManager {
   }
 
   public setToken(token: string): string {
-    console.log("set tokens");
     this.inMemoryJWT = token;
     const { exp, iat } = jwtDecode(token);
 

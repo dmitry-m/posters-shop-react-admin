@@ -188,7 +188,6 @@ const EventList = () => {
 
   const events = mixOrdersAndReviews(orders, reviews);
 
-  console.log({ totalOrders });
   return (
     <Box ml={2}>
       <Card>

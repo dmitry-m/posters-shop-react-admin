@@ -24,7 +24,6 @@ export const inMemoryJWT = new TokenManager(TOKEN_URL);
 
 export const authProvider: MyAuthProvider = {
   setAuth: (data) => {
-    console.log("authProvider setAuth");
     const { accessToken, ...user } = data;
     localStorage.setItem("user", JSON.stringify(user));
     inMemoryJWT.setToken(accessToken);
@@ -58,8 +57,6 @@ export const authProvider: MyAuthProvider = {
         return this.setAuth(json);
       })
       .catch((error: ResponseError) => {
-        console.log("auth provider error");
-        console.log({ error });
         return Promise.reject(error);
       });
   },
@@ -67,15 +64,13 @@ export const authProvider: MyAuthProvider = {
   logout: () => {
     inMemoryJWT.eraseToken();
     localStorage.removeItem("user");
-    console.log("logout");
     void fetchUtils.fetchJson(LOGOUT_URL);
 
-    return Promise.resolve("/login");
+    return Promise.resolve();
   },
 
   checkError(error: ResponseError) {
     const { status } = error;
-    console.log("checkError");
     if (status !== 404) {
       localStorage.removeItem("user");
     }
@@ -83,7 +78,6 @@ export const authProvider: MyAuthProvider = {
   },
 
   checkAuth() {
-    console.log("checkAuth");
     const user = localStorage.getItem("user");
     if (user) return Promise.resolve();
 
@@ -97,29 +91,23 @@ export const authProvider: MyAuthProvider = {
         return Promise.resolve();
       })
       .catch(() => {
-        console.log({ eraseTokens: "checkAuth" });
         localStorage.removeItem("user");
         inMemoryJWT.eraseToken();
-        console.log("auth error");
         return Promise.reject({ message: "ra.auth.auth_check_error" });
       });
   },
 
   getPermissions() {
-    console.log("checkPermissions");
     const user = localStorage.getItem("user");
     if (user) {
       const { role } = JSON.parse(user) as AuthInterface;
-      console.log({ role });
       return Promise.resolve(role);
     }
     return Promise.resolve(null);
   },
 
   getIdentity: () => {
-    console.log("checkIdentity");
     const user = localStorage.getItem("user");
-    console.log({ user });
     return user ? Promise.resolve(JSON.parse(user)) : Promise.reject({ redirectTo: "/" });
   },
 };

@@ -41,11 +41,9 @@ const Register = () => {
   const isXSmall = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
 
   const handleSubmit = async (auth: FormValues) => {
-    console.log({ auth });
     setLoading(true);
     try {
       const result = await authProvider.signUp(auth);
-      console.log({ result });
       if (typeof result?.redirectTo === "string") {
         redirect(result.redirectTo);
       }

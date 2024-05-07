@@ -1,5 +1,5 @@
 import simpleRestProvider from "ra-data-simple-rest";
-import { fetchUtils, Options, UpdateParams } from "react-admin";
+import { fetchUtils, Options, UpdateParams, UpdateResult } from "react-admin";
 
 import { API_URL } from "./apiConstants";
 import { inMemoryJWT } from "./authProvider";
@@ -24,7 +24,7 @@ export const dataProvider = {
   update: (
     resource: string,
     params: UpdateParams & { data: { id?: string } },
-  ): Promise<{ data: { id: string; [key: string]: string } }> => {
+  ): Promise<UpdateResult> => {
     const {
       data: { id, ...restData },
     } = params;

@@ -40,7 +40,6 @@ const Login = () => {
   });
 
   const handleSubmit = async (auth: FormValues) => {
-    console.log({ auth });
     setLoading(true);
     try {
       await login(auth, (location.state as { nextPathname?: string })?.nextPathname || "/");

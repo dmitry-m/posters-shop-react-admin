@@ -14,7 +14,6 @@ export const ThemeSwapper = () => {
   );
   const savedThemeColor = localStorage.getItem("themeColor") as "dark" | "light";
   const [themeColor, setThemeColor] = useTheme(savedThemeColor);
-  console.log({ swapper: themeName });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
